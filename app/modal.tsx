@@ -1,17 +1,17 @@
 import { Link } from 'expo-router';
-import { StyleSheet } from 'react-native';
-
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
+import { StyleSheet, Text, View, Platform } from 'react-native';
+import BackgroundWrapper from '../components/BackgroundWrapper';
 
 export default function ModalScreen() {
   return (
-    <ThemedView style={styles.container}>
-      <ThemedText type="title">This is a modal</ThemedText>
-      <Link href="/" dismissTo style={styles.link}>
-        <ThemedText type="link">Go to home screen</ThemedText>
-      </Link>
-    </ThemedView>
+    <BackgroundWrapper>
+      <View style={styles.container}>
+        <Text style={styles.title}>Это модальное окно</Text>
+        <Link href="/" dismissTo style={styles.link}>
+          <Text style={styles.linkText}>На главную</Text>
+        </Link>
+      </View>
+    </BackgroundWrapper>
   );
 }
 
@@ -22,8 +22,29 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: 20,
   },
+  title: {
+    fontSize: 24,
+    fontWeight: '700',
+    color: '#FFFFFF',
+    fontFamily: Platform.select({
+      ios: 'Georgia',
+      android: 'serif',
+      default: 'serif',
+    }),
+    marginBottom: 20,
+  },
   link: {
     marginTop: 15,
     paddingVertical: 15,
+  },
+  linkText: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: '#4A90A4',
+    fontFamily: Platform.select({
+      ios: 'Georgia',
+      android: 'serif',
+      default: 'serif',
+    }),
   },
 });
