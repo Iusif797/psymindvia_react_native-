@@ -4,14 +4,16 @@ const wrapperStyle: React.CSSProperties = {
   flex: 1,
   display: "flex",
   flexDirection: "column",
-  minHeight: "100vh",
+  height: "100%",
   background: "linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f1419 100%)",
+  overflow: "hidden",
 };
 
 const contentStyle: React.CSSProperties = {
   flex: 1,
   display: "flex",
   flexDirection: "column",
+  overflow: "auto",
 };
 
 export default function BackgroundWrapper({ children }: { children: React.ReactNode }) {

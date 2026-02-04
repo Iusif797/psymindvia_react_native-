@@ -1,8 +1,9 @@
 import { Drawer } from "expo-router/drawer";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { Platform } from "react-native";
+import { Platform, View } from "react-native";
 import CustomDrawerContent from "../components/CustomDrawerContent";
+import PanicButton from "../components/PanicButton";
 
 const drawerLabelStyle = {
   fontSize: 16,
@@ -17,6 +18,7 @@ const drawerLabelStyle = {
 export default function RootLayout() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
+      <View style={{ flex: 1 }}>
       <Drawer
         drawerContent={(props) => <CustomDrawerContent {...props} />}
         screenOptions={{
@@ -251,7 +253,36 @@ export default function RootLayout() {
             drawerItemStyle: { display: "none" },
           }}
         />
+        <Drawer.Screen
+          name="meditations/index"
+          options={{
+            title: "Медитации",
+            drawerLabel: "Медитации",
+            drawerIcon: ({ color, size }) => (
+              <MaterialCommunityIcons name="meditation" color={color} size={size} />
+            ),
+          }}
+        />
+        <Drawer.Screen
+          name="meditations/[id]"
+          options={{
+            title: "Медитация",
+            drawerItemStyle: { display: "none" },
+          }}
+        />
+        <Drawer.Screen
+          name="analytics/index"
+          options={{
+            title: "Аналитика",
+            drawerLabel: "Аналитика",
+            drawerIcon: ({ color, size }) => (
+              <MaterialCommunityIcons name="chart-line" color={color} size={size} />
+            ),
+          }}
+        />
       </Drawer>
+      <PanicButton />
+      </View>
     </GestureHandlerRootView>
   );
 }
