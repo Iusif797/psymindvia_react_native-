@@ -14,7 +14,7 @@ export default function Home() {
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.contentContainer}>
         <View style={styles.heroSection}>
           <View style={styles.heroContent}>
-            <Text style={styles.heroSubtitle}>Психолог Теона Хаметова</Text>
+            <Text style={styles.heroSubtitle}>Психолог{"\n"}Теона Хаметова</Text>
             <Text style={styles.heroTitle}>Клинический психолог в Чехии и онлайн</Text>
             <Text style={styles.heroDescription}>
               Добро пожаловать в Школу MINDVIA — пространство роста, знаний и самопознания! Здесь

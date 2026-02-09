@@ -1,96 +1,311 @@
-import { View, Text, StyleSheet, Image, Platform, TouchableOpacity, Linking } from "react-native";
-import { DrawerContentScrollView, DrawerItemList } from "@react-navigation/drawer";
+import { useCallback } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  Platform,
+  TouchableOpacity,
+  Linking,
+  KeyboardAvoidingView,
+  Dimensions,
+} from "react-native";
+import {
+  DrawerContentScrollView,
+  useDrawerProgress,
+} from "@react-navigation/drawer";
+import {
+  CommonActions,
+  DrawerActions,
+} from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { SafeAreaView } from "react-native-safe-area-context";
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+  interpolate,
+  useAnimatedReaction,
+  runOnJS,
+} from "react-native-reanimated";
+import * as Haptics from "expo-haptics";
+import { useDrawerOpen } from "../contexts/DrawerOpenContext";
+
+const springConfig = { damping: 18, stiffness: 180 };
+
+function DrawerItemRow({
+  label,
+  icon,
+  focused,
+  activeTintColor,
+  inactiveTintColor,
+  activeBgColor,
+  inactiveBgColor,
+  onPress,
+}: {
+  label: string;
+  icon: (props: {
+    focused: boolean;
+    color: string;
+    size: number;
+  }) => React.ReactNode;
+  focused: boolean;
+  activeTintColor: string;
+  inactiveTintColor: string;
+  activeBgColor: string;
+  inactiveBgColor: string;
+  onPress: () => void;
+}) {
+  const scale = useSharedValue(1);
+  const glow = useSharedValue(0);
+
+  const animatedRowStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+    backgroundColor: focused ? activeBgColor : inactiveBgColor,
+  }));
+
+  const animatedIconWrap = useAnimatedStyle(() => ({
+    opacity: 1 + glow.value * 0.2,
+  }));
+
+  const handlePressIn = useCallback(() => {
+    if (Platform.OS !== "web") {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    }
+    scale.value = withSpring(0.96, springConfig);
+    glow.value = withSpring(1, springConfig);
+  }, [scale, glow]);
+
+  const handlePressOut = useCallback(() => {
+    scale.value = withSpring(1, springConfig);
+    glow.value = withSpring(0, springConfig);
+  }, [scale, glow]);
+
+  const color = focused ? activeTintColor : inactiveTintColor;
+
+  return (
+    <Animated.View style={[styles.drawerItemRow, animatedRowStyle]}>
+      <TouchableOpacity
+        activeOpacity={1}
+        onPress={onPress}
+        onPressIn={handlePressIn}
+        onPressOut={handlePressOut}
+        style={styles.drawerItemTouch}
+      >
+        <Animated.View style={[styles.drawerItemIconWrap, animatedIconWrap]}>
+          {icon({ focused, color, size: 24 })}
+        </Animated.View>
+        <Text
+          style={[
+            styles.drawerItemLabel,
+            { color },
+          ]}
+          numberOfLines={1}
+        >
+          {label}
+        </Text>
+      </TouchableOpacity>
+    </Animated.View>
+  );
+}
 
 export default function CustomDrawerContent(props: any) {
-  return (
-    <View style={styles.container}>
-      <Image source={require("../assets/images/banner2.jpg")} style={styles.backgroundImage} />
-      <LinearGradient
-        colors={["rgba(0, 0, 0, 0.65)", "rgba(0, 0, 0, 0.75)", "rgba(0, 0, 0, 0.8)"]}
-        style={styles.darkOverlay}
-      />
-      <View style={styles.scrollWrapper}>
-        <DrawerContentScrollView
-          {...props}
-          contentContainerStyle={styles.scrollContent}
-          showsVerticalScrollIndicator={false}
-        >
-          <View style={styles.headerSection}>
-            <View style={styles.logoCircle}>
-              <Image
-                source={require("../assets/images/logo_drawermenu.jpg")}
-                style={styles.logo}
-                resizeMode="cover"
-              />
-            </View>
-            <View style={styles.headerText}>
-              <Text style={styles.bannerTitle} numberOfLines={1}>
-                MINDVIA
-              </Text>
-              <Text style={styles.bannerSubtitle} numberOfLines={2}>
-                Психолог Теона Хаметова
-              </Text>
-            </View>
-          </View>
-          <View style={styles.headerDivider} />
+  const { state, navigation, descriptors } = props;
+  const progress = useDrawerProgress();
+  const { setDrawerOpen } = useDrawerOpen();
 
-          <View style={styles.menuSection}>
-            <DrawerItemList {...props} />
-          </View>
-        </DrawerContentScrollView>
-        <View style={styles.footer}>
-          <Text style={styles.developerName}>Developed by Iusif Mamedov</Text>
-          <View style={styles.footerIcons}>
-            <TouchableOpacity
-              style={styles.iconButton}
-              onPress={() => Linking.openURL("https://github.com/Iusif797")}
-              activeOpacity={0.7}
-              accessibilityLabel="GitHub profile"
+  useAnimatedReaction(
+    () => progress.value,
+    (value) => {
+      runOnJS(setDrawerOpen)(value > 0.5);
+    }
+  );
+
+  const animatedPanelStyle = useAnimatedStyle(() => {
+    const opacity = interpolate(progress.value, [0, 0.4, 1], [0, 0.8, 1]);
+    return { opacity };
+  });
+
+  const focusedRoute = state.routes[state.index];
+  const focusedDescriptor = descriptors[focusedRoute?.key];
+  const focusedOptions = focusedDescriptor?.options ?? {};
+  const {
+    drawerActiveTintColor = "#FFFFFF",
+    drawerInactiveTintColor = "rgba(255, 255, 255, 0.7)",
+    drawerActiveBackgroundColor = "rgba(255, 255, 255, 0.15)",
+    drawerInactiveBackgroundColor = "transparent",
+  } = focusedOptions;
+
+  const visibleRoutes = state.routes.filter((route: { key: string }) => {
+    const opts = descriptors[route.key]?.options;
+    return opts?.drawerItemStyle?.display !== "none";
+  });
+
+  const panelWidth = 310;
+  const panelHeight = Dimensions.get("window").height;
+
+  return (
+    <View style={styles.root}>
+      <Animated.View style={[styles.panelWrap, animatedPanelStyle]}>
+        <Image
+          source={require("../assets/images/banner2.jpg")}
+          style={[styles.panelBgImage, { width: panelWidth, height: panelHeight }]}
+          resizeMode="cover"
+        />
+        <LinearGradient
+          colors={[
+            "rgba(0, 0, 0, 0.5)",
+            "rgba(0, 0, 0, 0.65)",
+            "rgba(0, 0, 0, 0.75)",
+          ]}
+          style={StyleSheet.absoluteFill}
+        />
+        <SafeAreaView style={styles.panel} edges={["top", "left"]}>
+          <KeyboardAvoidingView
+            style={styles.keyboardWrap}
+            behavior={Platform.OS === "ios" ? "padding" : undefined}
+            keyboardVerticalOffset={0}
+          >
+            <DrawerContentScrollView
+              {...props}
+              contentContainerStyle={styles.scrollContent}
+              showsVerticalScrollIndicator={false}
             >
-              <MaterialCommunityIcons name="github" size={22} color="rgba(255, 255, 255, 0.75)" />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.iconButton}
-              onPress={() => Linking.openURL("https://wa.me/420773975235")}
-              activeOpacity={0.7}
-              accessibilityLabel="WhatsApp contact"
-            >
-              <MaterialCommunityIcons name="whatsapp" size={22} color="rgba(255, 255, 255, 0.75)" />
-            </TouchableOpacity>
-          </View>
-        </View>
-      </View>
+              <View style={styles.headerSection}>
+                <View style={styles.logoCircle}>
+                  <Image
+                    source={require("../assets/images/logo_drawermenu.jpg")}
+                    style={styles.logo}
+                    resizeMode="cover"
+                  />
+                </View>
+                <View style={styles.headerText}>
+                  <Text style={styles.bannerTitle} numberOfLines={1}>
+                    MINDVIA
+                  </Text>
+                  <Text style={styles.bannerSubtitle} numberOfLines={2}>
+                    Психолог{"\n"}Теона Хаметова
+                  </Text>
+                </View>
+              </View>
+              <View style={styles.headerDivider} />
+
+              <View style={styles.menuSection}>
+                {visibleRoutes.map((route: { key: string; name: string; params?: object }, i: number) => {
+                  const focused = state.routes.indexOf(route) === state.index;
+                  const opts = descriptors[route.key]?.options ?? {};
+                  const title =
+                    opts.drawerLabel ?? opts.title ?? route.name;
+                  const drawerIcon = opts.drawerIcon;
+
+                  const onPress = () => {
+                    if (Platform.OS !== "web") {
+                      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                    }
+                    const event = navigation.emit({
+                      type: "drawerItemPress",
+                      target: route.key,
+                      canPreventDefault: true,
+                    });
+                    if (!event.defaultPrevented) {
+                      navigation.dispatch({
+                        ...(focused
+                          ? DrawerActions.closeDrawer()
+                          : CommonActions.navigate(route)),
+                        target: state.key,
+                      });
+                    }
+                  };
+
+                  if (typeof drawerIcon !== "function") return null;
+
+                  return (
+                    <DrawerItemRow
+                      key={route.key}
+                      label={typeof title === "string" ? title : route.name}
+                      icon={drawerIcon}
+                      focused={focused}
+                      activeTintColor={drawerActiveTintColor}
+                      inactiveTintColor={drawerInactiveTintColor}
+                      activeBgColor={drawerActiveBackgroundColor}
+                      inactiveBgColor={drawerInactiveBackgroundColor}
+                      onPress={onPress}
+                    />
+                  );
+                })}
+              </View>
+            </DrawerContentScrollView>
+
+            <View style={styles.footer}>
+              <Text style={styles.developerName}>
+                Developed by Iusif Mamedov
+              </Text>
+              <View style={styles.footerIcons}>
+                <TouchableOpacity
+                  onPress={() => {
+                    if (Platform.OS !== "web") {
+                      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                    }
+                    Linking.openURL("https://github.com/Iusif797");
+                  }}
+                  activeOpacity={0.7}
+                  style={styles.iconButton}
+                  accessibilityLabel="GitHub profile"
+                >
+                  <MaterialCommunityIcons
+                    name="github"
+                    size={22}
+                    color="rgba(255, 255, 255, 0.75)"
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    if (Platform.OS !== "web") {
+                      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                    }
+                    Linking.openURL("https://wa.me/420773975235");
+                  }}
+                  activeOpacity={0.7}
+                  style={styles.iconButton}
+                  accessibilityLabel="WhatsApp contact"
+                >
+                  <MaterialCommunityIcons
+                    name="whatsapp"
+                    size={22}
+                    color="rgba(255, 255, 255, 0.75)"
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+          </KeyboardAvoidingView>
+        </SafeAreaView>
+      </Animated.View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  root: {
     flex: 1,
+  },
+  panelWrap: {
+    flex: 1,
+    overflow: "hidden",
     position: "relative",
   },
-  backgroundImage: {
+  panelBgImage: {
     position: "absolute",
     top: 0,
     left: 0,
     right: 0,
     bottom: 0,
-    width: "100%",
-    height: "100%",
-    resizeMode: "cover",
   },
-  darkOverlay: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    width: "100%",
-    height: "100%",
+  panel: {
+    flex: 1,
+    backgroundColor: "transparent",
   },
-  scrollWrapper: {
+  keyboardWrap: {
     flex: 1,
   },
   scrollContent: {
@@ -101,7 +316,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 20,
-    paddingTop: 44,
+    paddingTop: 24,
     paddingHorizontal: 24,
     paddingBottom: 20,
   },
@@ -160,8 +375,36 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   menuSection: {
+    gap: 6,
     paddingTop: 8,
     paddingBottom: 20,
+    paddingHorizontal: 16,
+  },
+  drawerItemRow: {
+    borderRadius: 14,
+    overflow: "hidden",
+  },
+  drawerItemTouch: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    gap: 14,
+  },
+  drawerItemIconWrap: {
+    width: 28,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  drawerItemLabel: {
+    flex: 1,
+    fontSize: 16,
+    fontWeight: "600",
+    fontFamily: Platform.select({
+      ios: "Georgia",
+      android: "serif",
+      default: "serif",
+    }),
   },
   footer: {
     flexDirection: "row",

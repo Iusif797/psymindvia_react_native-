@@ -2,145 +2,178 @@ import { View, TextInput, Pressable, Text, StyleSheet, ScrollView, StatusBar, Li
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import BackgroundWrapper from "../components/BackgroundWrapper";
 
-const { height } = Dimensions.get("window");
+const { width, height } = Dimensions.get("window");
 
 export default function Contact() {
   return (
     <BackgroundWrapper>
       <View style={styles.container}>
-      <StatusBar barStyle="light-content" />
-      <KeyboardAvoidingView
-        style={styles.keyboardView}
-        behavior={Platform.OS === "ios" ? "padding" : undefined}
-      >
-      <ScrollView style={styles.scrollView} contentContainerStyle={styles.contentContainer} keyboardShouldPersistTaps="handled">
-        <View style={styles.heroSection}>
-          <View style={styles.heroContent}>
-            <Text style={styles.heroTitle}>Контакты</Text>
-            <Text style={styles.heroSubtitle}>
-              Свяжитесь со мной любым удобным для вас способом, чтобы задать вопросы или записаться на
-              консультацию.
-            </Text>
-          </View>
-        </View>
-        
-        <View style={styles.formSection}>
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Ваше имя</Text>
-            <TextInput 
-              placeholder="Введите ваше имя" 
-              style={styles.input}
-              placeholderTextColor="rgba(255, 255, 255, 0.5)"
-            />
-          </View>
-          
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Email</Text>
-            <TextInput 
-              placeholder="example@email.com" 
-              style={styles.input}
-              keyboardType="email-address"
-              autoCapitalize="none"
-              placeholderTextColor="rgba(255, 255, 255, 0.5)"
-            />
-          </View>
-          
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Телефон</Text>
-            <TextInput 
-              placeholder="" 
-              style={styles.input}
-              keyboardType="phone-pad"
-              placeholderTextColor="rgba(255, 255, 255, 0.5)"
-            />
-          </View>
-          
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Сообщение</Text>
-            <TextInput 
-              placeholder="Расскажите коротко о вашем запросе..." 
-              style={[styles.input, styles.textarea]} 
-              multiline
-              numberOfLines={6}
-              textAlignVertical="top"
-              placeholderTextColor="rgba(255, 255, 255, 0.5)"
-            />
-          </View>
-          
-          <Pressable style={styles.submitButton}>
-            <Text style={styles.submitButtonText}>Отправить заявку</Text>
-            <MaterialCommunityIcons name="send" size={20} color="#FFFFFF" />
-          </Pressable>
-        </View>
-        
-        <View style={styles.contactInfoSection}>
-          <View style={styles.contactItem}>
-            <View style={styles.contactIconContainer}>
-              <MaterialCommunityIcons name="phone-outline" size={26} color="#4A90A4" />
+        <StatusBar barStyle="light-content" />
+        <KeyboardAvoidingView
+          style={styles.keyboardView}
+          behavior={Platform.OS === "ios" ? "padding" : undefined}
+        >
+          <ScrollView
+            style={styles.scrollView}
+            contentContainerStyle={styles.contentContainer}
+            keyboardShouldPersistTaps="handled"
+          >
+            <View style={styles.heroSection}>
+              <View style={styles.badge}>
+                <Text style={styles.badgeText}>Связаться</Text>
+              </View>
+              <Text style={styles.heroTitle}>Свяжитесь со мной</Text>
+              <Text style={styles.heroSubtitle}>
+                Готов ответить на все ваши вопросы и помочь записаться на консультацию
+              </Text>
             </View>
-            <View style={styles.contactTextContainer}>
-              <Text style={styles.contactLabel}>Телефон</Text>
-              <Text style={styles.contactValue}>+994 50 525 25 09</Text>
-            </View>
-            <Pressable
-              style={styles.contactAction}
-              onPress={() => Linking.openURL("tel:+994505252509")}
-              hitSlop={12}
-            >
-              <MaterialCommunityIcons name="arrow-top-right" size={20} color="#9CA3AF" />
-            </Pressable>
-          </View>
 
-          <View style={styles.contactItem}>
-            <View style={styles.contactIconContainer}>
-              <MaterialCommunityIcons name="email-outline" size={26} color="#4A90A4" />
-            </View>
-            <View style={styles.contactTextContainer}>
-              <Text style={styles.contactLabel}>Email</Text>
-              <Text style={styles.contactValue}>teonaxametova5@gmail.com</Text>
-            </View>
-            <Pressable
-              style={styles.contactAction}
-              onPress={() => Linking.openURL("mailto:teonaxametova5@gmail.com")}
-              hitSlop={12}
-            >
-              <MaterialCommunityIcons name="arrow-top-right" size={20} color="#9CA3AF" />
-            </Pressable>
-          </View>
-          
-          <View style={styles.contactItem}>
-            <View style={styles.contactIconContainer}>
-              <MaterialCommunityIcons name="map-marker-outline" size={26} color="#4A90A4" />
-            </View>
-            <View style={styles.contactTextContainer}>
-              <Text style={styles.contactLabel}>Адрес</Text>
-              <Text style={styles.contactValue}>Баку, Азербайджан</Text>
-            </View>
-          </View>
-          
-          <View style={styles.contactItem}>
-            <View style={styles.contactIconContainer}>
-              <MaterialCommunityIcons name="clock-outline" size={26} color="#4A90A4" />
-            </View>
-            <View style={styles.contactTextContainer}>
-              <Text style={styles.contactLabel}>Часы работы</Text>
-              <Text style={styles.contactValue}>Пн-Пт: 10:00 - 20:00</Text>
-            </View>
-          </View>
+            <View style={styles.formSection}>
+              <View style={styles.formCard}>
+                <Text style={styles.formTitle}>Отправить сообщение</Text>
 
-          <Pressable style={styles.websiteCard} onPress={() => Linking.openURL("https://www.psymindvia.com/")}>
-            <View style={styles.websiteIcon}>
-              <MaterialCommunityIcons name="web" size={26} color="#4A90A4" />
+                <View style={styles.inputGroup}>
+                  <View style={styles.inputContainer}>
+                    <Text style={styles.label}>Ваше имя *</Text>
+                    <TextInput
+                      placeholder="Введите ваше имя"
+                      style={styles.input}
+                      placeholderTextColor="rgba(255, 255, 255, 0.6)"
+                    />
+                  </View>
+
+                  <View style={styles.inputContainer}>
+                    <Text style={styles.label}>Email *</Text>
+                    <TextInput
+                      placeholder="example@email.com"
+                      style={styles.input}
+                      keyboardType="email-address"
+                      autoCapitalize="none"
+                      placeholderTextColor="rgba(255, 255, 255, 0.6)"
+                    />
+                  </View>
+                </View>
+
+                <View style={styles.inputContainer}>
+                  <Text style={styles.label}>Телефон</Text>
+                  <TextInput
+                    placeholder="+994 XX XXX XX XX"
+                    style={styles.input}
+                    keyboardType="phone-pad"
+                    placeholderTextColor="rgba(255, 255, 255, 0.6)"
+                  />
+                </View>
+
+                <View style={styles.inputContainer}>
+                  <Text style={styles.label}>Сообщение *</Text>
+                  <TextInput
+                    placeholder="Расскажите о вашем запросе..."
+                    style={[styles.input, styles.textarea]}
+                    multiline
+                    numberOfLines={6}
+                    textAlignVertical="top"
+                    placeholderTextColor="rgba(255, 255, 255, 0.6)"
+                  />
+                </View>
+
+                <Pressable style={styles.submitButton}>
+                  <Text style={styles.submitButtonText}>Отправить сообщение</Text>
+                  <MaterialCommunityIcons name="send" size={20} color="#FFFFFF" />
+                </Pressable>
+              </View>
             </View>
-            <View style={styles.websiteContent}>
-              <Text style={styles.websiteLabel}>Сайт</Text>
-              <Text style={styles.websiteValue}>psymindvia.com</Text>
+
+            <View style={styles.contactInfoSection}>
+              <Text style={styles.sectionTitle}>Контактная информация</Text>
+
+              <View style={styles.infoGrid}>
+                <View style={styles.contactItem}>
+                  <View style={styles.contactIconContainer}>
+                    <MaterialCommunityIcons name="phone-outline" size={24} color="#4A90A4" />
+                  </View>
+                  <View style={styles.contactTextContainer}>
+                    <Text style={styles.contactLabel}>Телефон</Text>
+                    <Text style={styles.contactValue}>+994 50 525 25 09</Text>
+                  </View>
+                  <Pressable
+                    style={styles.contactAction}
+                    onPress={() => Linking.openURL("tel:+994505252509")}
+                  >
+                    <MaterialCommunityIcons name="arrow-top-right" size={18} color="#9CA3AF" />
+                  </Pressable>
+                </View>
+
+                <View style={styles.contactItem}>
+                  <View style={styles.contactIconContainer}>
+                    <MaterialCommunityIcons name="email-outline" size={24} color="#4A90A4" />
+                  </View>
+                  <View style={styles.contactTextContainer}>
+                    <Text style={styles.contactLabel}>Email</Text>
+                    <Text style={styles.contactValue}>teonaxametova5@gmail.com</Text>
+                  </View>
+                  <Pressable
+                    style={styles.contactAction}
+                    onPress={() => Linking.openURL("mailto:teonaxametova5@gmail.com")}
+                  >
+                    <MaterialCommunityIcons name="arrow-top-right" size={18} color="#9CA3AF" />
+                  </Pressable>
+                </View>
+
+                <View style={styles.contactItem}>
+                  <View style={styles.contactIconContainer}>
+                    <MaterialCommunityIcons name="map-marker-outline" size={24} color="#4A90A4" />
+                  </View>
+                  <View style={styles.contactTextContainer}>
+                    <Text style={styles.contactLabel}>Адрес</Text>
+                    <Text style={styles.contactValue}>Баку, Азербайджан</Text>
+                  </View>
+                </View>
+
+                <View style={styles.contactItem}>
+                  <View style={styles.contactIconContainer}>
+                    <MaterialCommunityIcons name="clock-outline" size={24} color="#4A90A4" />
+                  </View>
+                  <View style={styles.contactTextContainer}>
+                    <Text style={styles.contactLabel}>Часы работы</Text>
+                    <Text style={styles.contactValue}>Пн-Пт: 10:00 - 20:00</Text>
+                  </View>
+                </View>
+              </View>
+
+              <Pressable
+                style={styles.websiteCard}
+                onPress={() => Linking.openURL("https://www.psymindvia.com/")}
+              >
+                <View style={styles.websiteIcon}>
+                  <MaterialCommunityIcons name="web" size={24} color="#4A90A4" />
+                </View>
+                <View style={styles.websiteContent}>
+                  <Text style={styles.websiteLabel}>Официальный сайт</Text>
+                  <Text style={styles.websiteValue}>psymindvia.com</Text>
+                </View>
+                <MaterialCommunityIcons name="arrow-top-right" size={18} color="#9CA3AF" />
+              </Pressable>
             </View>
-            <MaterialCommunityIcons name="arrow-top-right" size={20} color="#9CA3AF" />
-          </Pressable>
-        </View>
-      </ScrollView>
-      </KeyboardAvoidingView>
+
+            <View style={styles.socialSection}>
+              <Text style={styles.sectionTitle}>Социальные сети</Text>
+              <View style={styles.socialContainer}>
+                <Pressable style={styles.socialButton}>
+                  <MaterialCommunityIcons name="instagram" size={24} color="#FFFFFF" />
+                </Pressable>
+                <Pressable style={styles.socialButton}>
+                  <MaterialCommunityIcons name="facebook" size={24} color="#FFFFFF" />
+                </Pressable>
+                <Pressable style={styles.socialButton}>
+                  <MaterialCommunityIcons name="send" size={24} color="#FFFFFF" />
+                </Pressable>
+                <Pressable style={styles.socialButton}>
+                  <MaterialCommunityIcons name="whatsapp" size={24} color="#FFFFFF" />
+                </Pressable>
+              </View>
+            </View>
+          </ScrollView>
+        </KeyboardAvoidingView>
       </View>
     </BackgroundWrapper>
   );
@@ -161,55 +194,90 @@ const styles = StyleSheet.create({
     paddingBottom: 40,
   },
   heroSection: {
-    minHeight: height * 0.28,
+    minHeight: height * 0.25,
     justifyContent: "center",
     paddingHorizontal: 24,
     paddingTop: 24,
-    paddingBottom: 28,
+    paddingBottom: 32,
   },
-  heroContent: {
-    justifyContent: "center",
+  badge: {
+    alignSelf: "flex-start",
+    backgroundColor: "rgba(74, 144, 164, 0.2)",
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 20,
+    marginBottom: 16,
+  },
+  badgeText: {
+    color: "#4A90A4",
+    fontSize: 14,
+    fontWeight: "600",
+    fontFamily: Platform.select({
+      ios: "Georgia",
+      android: "serif",
+      default: "serif",
+    }),
   },
   heroTitle: {
-    fontSize: 38,
+    fontSize: 32,
     fontWeight: "700",
     color: "#FFFFFF",
-    marginBottom: 12,
+    marginBottom: 16,
     fontFamily: Platform.select({
       ios: "Georgia",
       android: "serif",
       default: "serif",
     }),
-    letterSpacing: 0.5,
-    textShadowColor: "rgba(0, 0, 0, 0.5)",
-    textShadowOffset: { width: 0, height: 2 },
-    textShadowRadius: 6,
+    letterSpacing: 0.3,
   },
   heroSubtitle: {
-    fontSize: 17,
+    fontSize: 16,
     fontWeight: "400",
-    color: "rgba(255, 255, 255, 0.95)",
-    lineHeight: 26,
+    color: "rgba(255, 255, 255, 0.9)",
+    lineHeight: 24,
     fontFamily: Platform.select({
       ios: "Georgia",
       android: "serif",
       default: "serif",
     }),
-    textShadowColor: "rgba(0, 0, 0, 0.3)",
-    textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 4,
   },
   formSection: {
     paddingHorizontal: 24,
-    paddingTop: 32,
     marginBottom: 32,
   },
+  formCard: {
+    backgroundColor: "rgba(255, 255, 255, 0.1)",
+    borderRadius: 20,
+    padding: 24,
+    borderWidth: 1,
+    borderColor: "rgba(255, 255, 255, 0.2)",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 12,
+    elevation: 5,
+  },
+  formTitle: {
+    fontSize: 20,
+    fontWeight: "600",
+    color: "#FFFFFF",
+    marginBottom: 24,
+    fontFamily: Platform.select({
+      ios: "Georgia",
+      android: "serif",
+      default: "serif",
+    }),
+  },
+  inputGroup: {
+    flexDirection: "row",
+    gap: 16,
+  },
   inputContainer: {
-    marginBottom: 22,
+    marginBottom: 20,
   },
   label: {
     fontSize: 15,
-    fontWeight: "600",
+    fontWeight: "500",
     color: "#FFFFFF",
     marginBottom: 10,
     fontFamily: Platform.select({
@@ -219,11 +287,11 @@ const styles = StyleSheet.create({
     }),
   },
   input: {
-    backgroundColor: "rgba(255, 255, 255, 0.15)",
+    backgroundColor: "rgba(255, 255, 255, 0.1)",
     borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.2)",
-    borderRadius: 14,
-    padding: 18,
+    borderColor: "rgba(255, 255, 255, 0.25)",
+    borderRadius: 12,
+    padding: 16,
     fontSize: 16,
     color: "#FFFFFF",
     fontFamily: Platform.select({
@@ -233,14 +301,14 @@ const styles = StyleSheet.create({
     }),
   },
   textarea: {
-    height: 130,
-    paddingTop: 18,
+    height: 120,
+    paddingTop: 16,
   },
   submitButton: {
     backgroundColor: "#4A90A4",
-    paddingVertical: 18,
-    paddingHorizontal: 28,
-    borderRadius: 14,
+    paddingVertical: 16,
+    paddingHorizontal: 24,
+    borderRadius: 12,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
@@ -254,7 +322,7 @@ const styles = StyleSheet.create({
   },
   submitButtonText: {
     color: "#FFFFFF",
-    fontSize: 17,
+    fontSize: 16,
     fontWeight: "600",
     fontFamily: Platform.select({
       ios: "Georgia",
@@ -264,33 +332,43 @@ const styles = StyleSheet.create({
   },
   contactInfoSection: {
     paddingHorizontal: 24,
-    gap: 18,
+    marginBottom: 32,
+  },
+  sectionTitle: {
+    fontSize: 22,
+    fontWeight: "600",
+    color: "#FFFFFF",
+    marginBottom: 24,
+    fontFamily: Platform.select({
+      ios: "Georgia",
+      android: "serif",
+      default: "serif",
+    }),
+  },
+  infoGrid: {
+    gap: 16,
+    marginBottom: 24,
   },
   contactItem: {
-    backgroundColor: "rgba(255, 255, 255, 0.15)",
-    borderRadius: 18,
+    backgroundColor: "rgba(255, 255, 255, 0.1)",
+    borderRadius: 16,
     padding: 20,
     flexDirection: "row",
     alignItems: "center",
     borderWidth: 1,
     borderColor: "rgba(255, 255, 255, 0.2)",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.08,
-    shadowRadius: 12,
-    elevation: 3,
   },
   contactAction: {
     padding: 8,
-    marginLeft: 8,
   },
   contactIconContainer: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    backgroundColor: "rgba(74, 144, 164, 0.1)",
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: "rgba(74, 144, 164, 0.15)",
     alignItems: "center",
     justifyContent: "center",
-    marginRight: 18,
+    marginRight: 16,
   },
   contactTextContainer: {
     flex: 1,
@@ -298,7 +376,7 @@ const styles = StyleSheet.create({
   contactLabel: {
     fontSize: 13,
     color: "rgba(255, 255, 255, 0.7)",
-    marginBottom: 6,
+    marginBottom: 4,
     fontFamily: Platform.select({
       ios: "Georgia",
       android: "serif",
@@ -306,8 +384,8 @@ const styles = StyleSheet.create({
     }),
   },
   contactValue: {
-    fontSize: 16,
-    fontWeight: "600",
+    fontSize: 15,
+    fontWeight: "500",
     color: "#FFFFFF",
     fontFamily: Platform.select({
       ios: "Georgia",
@@ -316,26 +394,22 @@ const styles = StyleSheet.create({
     }),
   },
   websiteCard: {
-    backgroundColor: "rgba(255, 255, 255, 0.15)",
-    borderRadius: 18,
+    backgroundColor: "rgba(255, 255, 255, 0.1)",
+    borderRadius: 16,
     padding: 20,
     flexDirection: "row",
     alignItems: "center",
     borderWidth: 1,
     borderColor: "rgba(255, 255, 255, 0.2)",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.08,
-    shadowRadius: 12,
-    elevation: 3,
   },
   websiteIcon: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    backgroundColor: "rgba(74, 144, 164, 0.1)",
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: "rgba(74, 144, 164, 0.15)",
     alignItems: "center",
     justifyContent: "center",
-    marginRight: 18,
+    marginRight: 16,
   },
   websiteContent: {
     flex: 1,
@@ -343,7 +417,7 @@ const styles = StyleSheet.create({
   websiteLabel: {
     fontSize: 13,
     color: "rgba(255, 255, 255, 0.7)",
-    marginBottom: 6,
+    marginBottom: 4,
     fontFamily: Platform.select({
       ios: "Georgia",
       android: "serif",
@@ -351,13 +425,33 @@ const styles = StyleSheet.create({
     }),
   },
   websiteValue: {
-    fontSize: 16,
-    fontWeight: "600",
+    fontSize: 15,
+    fontWeight: "500",
     color: "#FFFFFF",
     fontFamily: Platform.select({
       ios: "Georgia",
       android: "serif",
       default: "serif",
     }),
+  },
+  socialSection: {
+    paddingHorizontal: 24,
+  },
+  socialContainer: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    backgroundColor: "rgba(255, 255, 255, 0.1)",
+    borderRadius: 20,
+    paddingVertical: 20,
+    borderWidth: 1,
+    borderColor: "rgba(255, 255, 255, 0.2)",
+  },
+  socialButton: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: "rgba(74, 144, 164, 0.2)",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });

@@ -3,7 +3,9 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Platform, View } from "react-native";
 import CustomDrawerContent from "../components/CustomDrawerContent";
+import DrawerBurgerIcon from "../components/DrawerBurgerIcon";
 import PanicButton from "../components/PanicButton";
+import { DrawerOpenProvider, useDrawerOpen } from "../contexts/DrawerOpenContext";
 
 const drawerLabelStyle = {
   fontSize: 16,
@@ -15,10 +17,11 @@ const drawerLabelStyle = {
   }),
 };
 
-export default function RootLayout() {
+function RootLayoutContent() {
+  const { isDrawerOpen } = useDrawerOpen();
+
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <View style={{ flex: 1 }}>
+    <>
       <Drawer
         drawerContent={(props) => <CustomDrawerContent {...props} />}
         screenOptions={{
@@ -27,6 +30,7 @@ export default function RootLayout() {
           } as object),
           headerTransparent: false,
           headerTintColor: "#FFFFFF",
+          headerLeft: () => <DrawerBurgerIcon />,
           headerTitleStyle: {
             fontSize: 19,
             fontWeight: "700",
@@ -46,12 +50,20 @@ export default function RootLayout() {
           drawerActiveTintColor: "#FFFFFF",
           drawerInactiveTintColor: "rgba(255, 255, 255, 0.7)",
           drawerLabelStyle,
+          overlayColor: "rgba(0,0,0,0.5)",
           drawerStyle: {
             backgroundColor: "transparent",
             width: 310,
             borderTopRightRadius: 24,
             borderBottomRightRadius: 24,
             overflow: "hidden",
+            ...(Platform.OS === "android" && {
+              elevation: 24,
+              shadowColor: "#000",
+              shadowOffset: { width: 4, height: 0 },
+              shadowOpacity: 0.35,
+              shadowRadius: 20,
+            }),
           },
           drawerActiveBackgroundColor: "rgba(255, 255, 255, 0.15)",
         }}
@@ -167,16 +179,6 @@ export default function RootLayout() {
           }}
         />
         <Drawer.Screen
-          name="contact"
-          options={{
-            title: "Контакты",
-            drawerLabel: "Контакты",
-            drawerIcon: ({ color, size }) => (
-              <MaterialCommunityIcons name="message-text-outline" color={color} size={size} />
-            ),
-          }}
-        />
-        <Drawer.Screen
           name="tracker/response"
           options={{
             title: "Отклик",
@@ -280,9 +282,30 @@ export default function RootLayout() {
             ),
           }}
         />
+        <Drawer.Screen
+          name="contact"
+          options={{
+            title: "Контакты",
+            drawerLabel: "Контакты",
+            drawerIcon: ({ color, size }) => (
+              <MaterialCommunityIcons name="message-text-outline" color={color} size={size} />
+            ),
+          }}
+        />
       </Drawer>
-      <PanicButton />
-      </View>
+      {!isDrawerOpen && <PanicButton />}
+    </>
+  );
+}
+
+export default function RootLayout() {
+  return (
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <DrawerOpenProvider>
+        <View style={{ flex: 1 }}>
+          <RootLayoutContent />
+        </View>
+      </DrawerOpenProvider>
     </GestureHandlerRootView>
   );
 }

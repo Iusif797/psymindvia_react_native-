@@ -156,6 +156,7 @@ export default function AuthScreen() {
                     keyboardType="email-address"
                     autoCapitalize="none"
                     autoCorrect={false}
+                    autoComplete="email"
                     value={email}
                     onChangeText={(text) => {
                       setEmail(text);
@@ -187,6 +188,7 @@ export default function AuthScreen() {
                     secureTextEntry={!showPassword}
                     autoCapitalize="none"
                     autoCorrect={false}
+                    autoComplete="off"
                     value={password}
                     onChangeText={(text) => {
                       setPassword(text);
@@ -223,15 +225,16 @@ export default function AuthScreen() {
                       size={18}
                       color="#C9A050"
                     />
-                    <TextInput
-                      style={styles.input}
-                      placeholder="Повторите пароль"
-                      placeholderTextColor="rgba(255, 255, 255, 0.35)"
-                      secureTextEntry={!showPassword}
-                      autoCapitalize="none"
-                      autoCorrect={false}
-                      value={confirmPassword}
-                      onChangeText={(text) => {
+<TextInput
+                    style={styles.input}
+                    placeholder="Повторите пароль"
+                    placeholderTextColor="rgba(255, 255, 255, 0.35)"
+                    secureTextEntry={!showPassword}
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    autoComplete="off"
+                    value={confirmPassword}
+                    onChangeText={(text) => {
                         setConfirmPassword(text);
                         if (errors.confirmPassword)
                           setErrors({ ...errors, confirmPassword: "" });
@@ -401,6 +404,8 @@ const styles = StyleSheet.create({
       android: "serif",
       default: "serif",
     }),
+    borderWidth: 0,
+    outlineWidth: 0,
   },
   eyeButton: {
     padding: 2,
