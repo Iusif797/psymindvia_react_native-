@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import {
   View,
   Text,
@@ -9,14 +9,13 @@ import {
   Linking,
   KeyboardAvoidingView,
   Dimensions,
+  ScrollView,
 } from "react-native";
-import {
-  DrawerContentScrollView,
-  useDrawerProgress,
-} from "@react-navigation/drawer";
 import {
   CommonActions,
   DrawerActions,
+  type DrawerNavigationState,
+  type ParamListBase,
 } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -26,13 +25,50 @@ import Animated, {
   useSharedValue,
   withSpring,
   interpolate,
-  useAnimatedReaction,
-  runOnJS,
 } from "react-native-reanimated";
 import * as Haptics from "expo-haptics";
 import { useDrawerOpen } from "../contexts/DrawerOpenContext";
 
 const springConfig = { damping: 18, stiffness: 180 };
+
+type DrawerContentComponentProps = {
+  state: DrawerNavigationState<ParamListBase>;
+  navigation: {
+    emit: (event: {
+      type: "drawerItemPress";
+      target?: string;
+      canPreventDefault?: boolean;
+    }) => { defaultPrevented: boolean };
+    dispatch: (action: object) => void;
+  };
+  descriptors: Record<
+    string,
+    {
+      options: {
+        drawerLabel?: string | ((props: { color: string; focused: boolean }) => React.ReactNode);
+        title?: string;
+        drawerIcon?: (props: {
+          focused: boolean;
+          color: string;
+          size: number;
+        }) => React.ReactNode;
+        drawerItemStyle?: { display?: string };
+        drawerActiveTintColor?: string;
+        drawerInactiveTintColor?: string;
+        drawerActiveBackgroundColor?: string;
+        drawerInactiveBackgroundColor?: string;
+      };
+    }
+  >;
+};
+
+function getDrawerOpenFromState(state: DrawerNavigationState<ParamListBase>) {
+  const entry = [...(state.history ?? [])]
+    .reverse()
+    .find((item) => item.type === "drawer");
+  const status = entry && "status" in entry ? entry.status : state.default;
+  return status === "open";
+}
 
 function DrawerItemRow({
   label,
@@ -110,17 +146,17 @@ function DrawerItemRow({
   );
 }
 
-export default function CustomDrawerContent(props: any) {
+export default function CustomDrawerContent(rawProps: object) {
+  const props = rawProps as DrawerContentComponentProps;
   const { state, navigation, descriptors } = props;
-  const progress = useDrawerProgress();
+  const progress = useSharedValue(0);
   const { setDrawerOpen } = useDrawerOpen();
 
-  useAnimatedReaction(
-    () => progress.value,
-    (value) => {
-      runOnJS(setDrawerOpen)(value > 0.5);
-    }
-  );
+  useEffect(() => {
+    const isOpen = getDrawerOpenFromState(state);
+    progress.value = withSpring(isOpen ? 1 : 0, springConfig);
+    setDrawerOpen(isOpen);
+  }, [state, progress, setDrawerOpen]);
 
   const animatedPanelStyle = useAnimatedStyle(() => {
     const opacity = interpolate(progress.value, [0, 0.4, 1], [0, 0.8, 1]);
@@ -137,7 +173,7 @@ export default function CustomDrawerContent(props: any) {
     drawerInactiveBackgroundColor = "transparent",
   } = focusedOptions;
 
-  const visibleRoutes = state.routes.filter((route: { key: string }) => {
+  const visibleRoutes = state.routes.filter((route) => {
     const opts = descriptors[route.key]?.options;
     return opts?.drawerItemStyle?.display !== "none";
   });
@@ -167,8 +203,7 @@ export default function CustomDrawerContent(props: any) {
             behavior={Platform.OS === "ios" ? "padding" : undefined}
             keyboardVerticalOffset={0}
           >
-            <DrawerContentScrollView
-              {...props}
+            <ScrollView
               contentContainerStyle={styles.scrollContent}
               showsVerticalScrollIndicator={false}
             >
@@ -192,7 +227,7 @@ export default function CustomDrawerContent(props: any) {
               <View style={styles.headerDivider} />
 
               <View style={styles.menuSection}>
-                {visibleRoutes.map((route: { key: string; name: string; params?: object }, i: number) => {
+                {visibleRoutes.map((route) => {
                   const focused = state.routes.indexOf(route) === state.index;
                   const opts = descriptors[route.key]?.options ?? {};
                   const title =
@@ -235,7 +270,7 @@ export default function CustomDrawerContent(props: any) {
                   );
                 })}
               </View>
-            </DrawerContentScrollView>
+            </ScrollView>
 
             <View style={styles.footer}>
               <Text style={styles.developerName}>
