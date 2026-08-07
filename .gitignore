@@ -45,3 +45,7 @@ credentials/
 # generated native folders
 /ios
 /android
+
+# local signing credentials (Safe #2556) — nikdy do gitu
+credentials.json
+credentials/
