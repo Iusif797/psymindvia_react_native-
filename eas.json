@@ -25,20 +25,28 @@
   },
   "submit": {
     "production": {
+      "ios": {
+        "ascAppId": "6791179867",
+        "appleTeamId": "8U2KKLXVSN",
+        "ascApiKeyPath": "/home/devops/.config/asc-key.p8",
+        "ascApiKeyId": "U4ZPDU72CX",
+        "ascApiKeyIssuerId": "7b36a191-62bd-4525-a45d-38b877493538"
+      },
       "android": {
-        "serviceAccountKeyPath": "./google-play-key.json",
-        "track": "production"
+        "serviceAccountKeyPath": "/home/devops/.config/eas-submit-service-account.json",
+        "track": "internal",
+        "releaseStatus": "completed"
       }
     },
     "beta": {
       "android": {
-        "serviceAccountKeyPath": "./google-play-key.json",
+        "serviceAccountKeyPath": "/home/devops/.config/eas-submit-service-account.json",
         "track": "beta"
       }
     },
     "internal": {
       "android": {
-        "serviceAccountKeyPath": "./google-play-key.json",
+        "serviceAccountKeyPath": "/home/devops/.config/eas-submit-service-account.json",
         "track": "internal"
       }
     }
