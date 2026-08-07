@@ -19,7 +19,8 @@
       "android": {
         "buildType": "app-bundle",
         "credentialsSource": "local"
-      }
+      },
+      "autoIncrement": true
     }
   },
   "submit": {
