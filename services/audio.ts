@@ -9,69 +9,15 @@ export interface MeditationSession {
   duration: number;
 }
 
+/**
+ * Zaznam odmeditovanych minut. Prehravani zvuku tady NENI a nikdy nefungovalo:
+ * puvodni playSound()/pauseSound()/setVolume() jen prepinaly priznaky, v projektu
+ * neni expo-av ani expo-audio a neexistuje jediny zvukovy soubor. Dlazdice, ktere
+ * to volaly, byly 8. 8. 2026 odstraneny (realizace #235).
+ * ⛔ Nepridavat sem prazdne prehravaci metody. Bud pribude skutecny prehravac
+ *    a zvukove soubory, nebo tu prehravani nema co delat.
+ */
 class AudioService {
-  private sleepTimer: ReturnType<typeof setTimeout> | null = null;
-  private isPlaying = false;
-  private currentSoundId: string | null = null;
-  private volume = 0.7;
-
-  async init() {}
-
-  async playSound(soundId: string) {
-    await this.stopSound();
-    this.currentSoundId = soundId;
-    this.isPlaying = true;
-  }
-
-  async pauseSound() {
-    this.isPlaying = false;
-  }
-
-  async resumeSound() {
-    if (this.currentSoundId) {
-      this.isPlaying = true;
-    }
-  }
-
-  async stopSound() {
-    this.isPlaying = false;
-    this.currentSoundId = null;
-    this.clearSleepTimer();
-  }
-
-  async setVolume(vol: number) {
-    this.volume = vol;
-  }
-
-  getVolume() {
-    return this.volume;
-  }
-
-  setSleepTimer(minutes: number, onComplete: () => void) {
-    this.clearSleepTimer();
-    if (minutes > 0) {
-      this.sleepTimer = setTimeout(async () => {
-        await this.stopSound();
-        onComplete();
-      }, minutes * 60 * 1000);
-    }
-  }
-
-  clearSleepTimer() {
-    if (this.sleepTimer) {
-      clearTimeout(this.sleepTimer);
-      this.sleepTimer = null;
-    }
-  }
-
-  getIsPlaying() {
-    return this.isPlaying;
-  }
-
-  getCurrentSoundId() {
-    return this.currentSoundId;
-  }
-
   async saveMeditationSession(meditationId: string, duration: number) {
     const sessions = await this.getMeditationSessions();
     const session: MeditationSession = {

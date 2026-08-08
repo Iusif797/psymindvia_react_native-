@@ -12,13 +12,6 @@ export interface Meditation {
   audioUrl: string;
 }
 
-export interface AmbientSound {
-  id: string;
-  title: string;
-  icon: string;
-  color: string;
-  category: SoundCategory;
-}
 
 export const MEDITATION_CATEGORIES: Record<MeditationCategory, { label: string; icon: string; color: string }> = {
   sleep: { label: "Сон", icon: "moon-waning-crescent", color: "#6B7AA1" },
@@ -110,71 +103,4 @@ export const MEDITATIONS: Meditation[] = [
   },
 ];
 
-export const AMBIENT_SOUNDS: AmbientSound[] = [
-  {
-    id: "rain",
-    title: "Дождь",
-    icon: "weather-rainy",
-    color: "#6B8EAD",
-    category: "nature",
-  },
-  {
-    id: "forest",
-    title: "Лес",
-    icon: "pine-tree",
-    color: "#5BB89A",
-    category: "nature",
-  },
-  {
-    id: "ocean",
-    title: "Океан",
-    icon: "waves",
-    color: "#4A90A4",
-    category: "nature",
-  },
-  {
-    id: "fire",
-    title: "Костёр",
-    icon: "fire",
-    color: "#E07A50",
-    category: "nature",
-  },
-  {
-    id: "thunder",
-    title: "Гроза",
-    icon: "weather-lightning",
-    color: "#7B6B8E",
-    category: "nature",
-  },
-  {
-    id: "birds",
-    title: "Птицы",
-    icon: "bird",
-    color: "#7DCEA0",
-    category: "nature",
-  },
-  {
-    id: "wind",
-    title: "Ветер",
-    icon: "weather-windy",
-    color: "#8A9DB5",
-    category: "ambient",
-  },
-  {
-    id: "whitenoise",
-    title: "Белый шум",
-    icon: "blur",
-    color: "#A8A8A8",
-    category: "ambient",
-  },
-];
 
-export const SLEEP_TIMER_OPTIONS = [
-  { value: 0, label: "Без таймера" },
-  { value: 5, label: "5 минут" },
-  { value: 10, label: "10 минут" },
-  { value: 15, label: "15 минут" },
-  { value: 30, label: "30 минут" },
-  { value: 45, label: "45 минут" },
-  { value: 60, label: "1 час" },
-];

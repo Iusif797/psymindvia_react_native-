@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useCallback } from "react";
 import {
   View,
   Text,
@@ -8,7 +8,6 @@ import {
   StatusBar,
   Platform,
   Dimensions,
-  Modal,
 } from "react-native";
 import { router, useFocusEffect } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
@@ -16,24 +15,16 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import BackgroundWrapper from "../../components/BackgroundWrapper";
 import {
   MEDITATIONS,
-  AMBIENT_SOUNDS,
   MEDITATION_CATEGORIES,
-  SLEEP_TIMER_OPTIONS,
   type MeditationCategory,
   type Meditation,
-  type AmbientSound,
 } from "../../constants/meditations";
 import { audioService } from "../../services/audio";
-import Slider from "../../components/Slider";
 
 const { width } = Dimensions.get("window");
 
 export default function MeditationsScreen() {
   const [selectedCategory, setSelectedCategory] = useState<MeditationCategory | "all">("all");
-  const [playingSound, setPlayingSound] = useState<string | null>(null);
-  const [showTimerModal, setShowTimerModal] = useState(false);
-  const [sleepTimer, setSleepTimer] = useState(0);
-  const [volume, setVolume] = useState(0.7);
   const [totalMinutes, setTotalMinutes] = useState(0);
 
   useFocusEffect(
@@ -42,12 +33,6 @@ export default function MeditationsScreen() {
       return () => {};
     }, [])
   );
-
-  useEffect(() => {
-    const soundId = audioService.getCurrentSoundId();
-    setPlayingSound(soundId);
-    setVolume(audioService.getVolume());
-  }, []);
 
   const loadStats = async () => {
     const minutes = await audioService.getTotalMeditationMinutes();
@@ -60,40 +45,6 @@ export default function MeditationsScreen() {
 
   const handleMeditationPress = (meditation: Meditation) => {
     router.push(`/meditations/${meditation.id}` as any);
-  };
-
-  const handleSoundPress = async (sound: AmbientSound) => {
-    if (playingSound === sound.id) {
-      await audioService.stopSound();
-      setPlayingSound(null);
-    } else {
-      await audioService.playSound(sound.id);
-      setPlayingSound(sound.id);
-    }
-  };
-
-  const handleVolumeChange = async (value: number) => {
-    setVolume(value);
-    await audioService.setVolume(value);
-  };
-
-  const handleSetTimer = (minutes: number) => {
-    setSleepTimer(minutes);
-    if (minutes > 0 && playingSound) {
-      audioService.setSleepTimer(minutes, () => {
-        setPlayingSound(null);
-        setSleepTimer(0);
-      });
-    } else {
-      audioService.clearSleepTimer();
-    }
-    setShowTimerModal(false);
-  };
-
-  const handleStopAll = async () => {
-    await audioService.stopSound();
-    setPlayingSound(null);
-    setSleepTimer(0);
   };
 
   const formatDuration = (minutes: number) => {
@@ -231,147 +182,9 @@ export default function MeditationsScreen() {
             </View>
           </View>
 
-          <View style={styles.section}>
-            <View style={styles.sectionHeader}>
-              <Text style={styles.sectionTitle}>Ambient звуки</Text>
-              {playingSound && (
-                <Pressable style={styles.stopButton} onPress={handleStopAll}>
-                  <MaterialCommunityIcons name="stop" size={16} color="#E05555" />
-                  <Text style={styles.stopButtonText}>Стоп</Text>
-                </Pressable>
-              )}
-            </View>
-
-            <View style={styles.soundsGrid}>
-              {AMBIENT_SOUNDS.map((sound) => {
-                const isPlaying = playingSound === sound.id;
-                return (
-                  <Pressable
-                    key={sound.id}
-                    style={[
-                      styles.soundCard,
-                      isPlaying && { borderColor: sound.color, backgroundColor: `${sound.color}20` },
-                    ]}
-                    onPress={() => handleSoundPress(sound)}
-                  >
-                    <View
-                      style={[
-                        styles.soundIcon,
-                        { backgroundColor: `${sound.color}30` },
-                        isPlaying && { backgroundColor: `${sound.color}50` },
-                      ]}
-                    >
-                      <MaterialCommunityIcons
-                        name={sound.icon as any}
-                        size={24}
-                        color={sound.color}
-                      />
-                      {isPlaying && (
-                        <View style={styles.playingIndicator}>
-                          <View style={[styles.playingDot, { backgroundColor: sound.color }]} />
-                        </View>
-                      )}
-                    </View>
-                    <Text
-                      style={[
-                        styles.soundTitle,
-                        isPlaying && { color: sound.color },
-                      ]}
-                    >
-                      {sound.title}
-                    </Text>
-                  </Pressable>
-                );
-              })}
-            </View>
-          </View>
-
-          {playingSound && (
-            <View style={styles.controlsSection}>
-              <View style={styles.controlRow}>
-                <MaterialCommunityIcons
-                  name="volume-low"
-                  size={20}
-                  color="rgba(255, 255, 255, 0.6)"
-                />
-                <Slider
-                  value={volume}
-                  onValueChange={handleVolumeChange}
-                  minimumValue={0}
-                  maximumValue={1}
-                  style={styles.volumeSlider}
-                />
-                <MaterialCommunityIcons
-                  name="volume-high"
-                  size={20}
-                  color="rgba(255, 255, 255, 0.6)"
-                />
-              </View>
-
-              <Pressable
-                style={styles.timerButton}
-                onPress={() => setShowTimerModal(true)}
-              >
-                <MaterialCommunityIcons
-                  name="timer-outline"
-                  size={20}
-                  color={sleepTimer > 0 ? "#F4C542" : "rgba(255, 255, 255, 0.6)"}
-                />
-                <Text
-                  style={[
-                    styles.timerButtonText,
-                    sleepTimer > 0 && { color: "#F4C542" },
-                  ]}
-                >
-                  {sleepTimer > 0 ? `Таймер: ${sleepTimer} мин` : "Таймер сна"}
-                </Text>
-              </Pressable>
-            </View>
-          )}
-
           <View style={styles.footerSpace} />
         </ScrollView>
 
-        <Modal
-          visible={showTimerModal}
-          transparent
-          animationType="fade"
-          onRequestClose={() => setShowTimerModal(false)}
-        >
-          <Pressable
-            style={styles.modalOverlay}
-            onPress={() => setShowTimerModal(false)}
-          >
-            <Pressable style={styles.modalContent} onPress={() => {}}>
-              <Text style={styles.modalTitle}>Таймер засыпания</Text>
-              <Text style={styles.modalSubtitle}>
-                Звук автоматически выключится
-              </Text>
-
-              <View style={styles.timerOptions}>
-                {SLEEP_TIMER_OPTIONS.map((option) => (
-                  <Pressable
-                    key={option.value}
-                    style={[
-                      styles.timerOption,
-                      sleepTimer === option.value && styles.timerOptionActive,
-                    ]}
-                    onPress={() => handleSetTimer(option.value)}
-                  >
-                    <Text
-                      style={[
-                        styles.timerOptionText,
-                        sleepTimer === option.value && styles.timerOptionTextActive,
-                      ]}
-                    >
-                      {option.label}
-                    </Text>
-                  </Pressable>
-                ))}
-              </View>
-            </Pressable>
-          </Pressable>
-        </Modal>
       </View>
     </BackgroundWrapper>
   );
