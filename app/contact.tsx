@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState } from "react";
 import { View, TextInput, Pressable, Text, StyleSheet, ScrollView, StatusBar, Linking, Platform, Dimensions, KeyboardAvoidingView, Alert } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import BackgroundWrapper from "../components/BackgroundWrapper";
@@ -8,48 +8,73 @@ const { height } = Dimensions.get("window");
 const CONTACT_EMAIL = "teonaxametova5@gmail.com";
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+/**
+ * У приложения нет собственного сервера, поэтому форма не «отправляет»
+ * сообщение сама — она собирает его и передаёт в почтовый клиент
+ * устройства. Так письмо реально уходит и остаётся у пользователя
+ * в «Отправленных». Если почтовый клиент недоступен, показываем адрес,
+ * чтобы человек мог написать вручную, — но молча ничего не теряем.
+ */
+const CONTACT_EMAIL = "teonaxametova5@gmail.com";
+
 export default function Contact() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [message, setMessage] = useState("");
+  const [sending, setSending] = useState(false);
 
-  const handleSubmit = useCallback(async () => {
-    if (!name.trim()) {
-      Alert.alert("Заполните форму", "Пожалуйста, укажите ваше имя.");
-      return;
-    }
-    if (!EMAIL_REGEX.test(email.trim())) {
-      Alert.alert("Некорректный email", "Проверьте адрес электронной почты.");
-      return;
-    }
-    if (!message.trim()) {
-      Alert.alert("Заполните форму", "Пожалуйста, напишите сообщение.");
+  const handleSubmit = async () => {
+    const trimmedName = name.trim();
+    const trimmedEmail = email.trim();
+    const trimmedMessage = message.trim();
+
+    if (!trimmedName || !trimmedEmail || !trimmedMessage) {
+      Alert.alert(
+        "Заполните обязательные поля",
+        "Пожалуйста, укажите имя, email и текст сообщения."
+      );
       return;
     }
 
-    const subject = encodeURIComponent("Заявка из приложения Psymindvia");
-    const body = encodeURIComponent(
-      `Имя: ${name.trim()}\nEmail: ${email.trim()}\nТелефон: ${phone.trim() || "не указан"}\n\nСообщение:\n${message.trim()}`
-    );
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) {
+      Alert.alert("Проверьте email", "Кажется, адрес указан с ошибкой.");
+      return;
+    }
+
+    setSending(true);
+
+    const subject = `Заявка из приложения — ${trimmedName}`;
+    const body = [
+      `Имя: ${trimmedName}`,
+      `Email: ${trimmedEmail}`,
+      phone.trim() ? `Телефон: ${phone.trim()}` : null,
+      "",
+      trimmedMessage,
+    ]
+      .filter((line) => line !== null)
+      .join("\n");
+
+    const mailUrl =
+      `mailto:${CONTACT_EMAIL}` +
+      `?subject=${encodeURIComponent(subject)}` +
+      `&body=${encodeURIComponent(body)}`;
 
     try {
-      await Linking.openURL(`mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`);
+      await Linking.openURL(mailUrl);
       setName("");
       setEmail("");
       setPhone("");
       setMessage("");
-      Alert.alert(
-        "Сообщение подготовлено",
-        "Откроется почтовое приложение — нажмите «Отправить», чтобы завершить."
-      );
     } catch {
       Alert.alert(
         "Не удалось открыть почту",
-        `Напишите нам напрямую: ${CONTACT_EMAIL}`
+        `На устройстве не найден почтовый клиент. Напишите, пожалуйста, напрямую на ${CONTACT_EMAIL} — или позвоните по телефону, указанному ниже.`
       );
+    } finally {
+      setSending(false);
     }
-  }, [name, email, phone, message]);
+  };
 
   return (
     <BackgroundWrapper>
@@ -130,10 +155,23 @@ export default function Contact() {
                   />
                 </View>
 
-                <Pressable style={styles.submitButton} onPress={handleSubmit}>
-                  <Text style={styles.submitButtonText}>Отправить сообщение</Text>
+                <Pressable
+                  style={[styles.submitButton, sending && styles.submitButtonDisabled]}
+                  onPress={handleSubmit}
+                  disabled={sending}
+                  accessibilityRole="button"
+                  accessibilityLabel="Отправить сообщение"
+                >
+                  <Text style={styles.submitButtonText}>
+                    {sending ? "Открываем почту…" : "Отправить сообщение"}
+                  </Text>
                   <MaterialCommunityIcons name="send" size={20} color="#FFFFFF" />
                 </Pressable>
+
+                <Text style={styles.submitHint}>
+                  Сообщение откроется в вашем почтовом приложении — останется
+                  нажать «Отправить».
+                </Text>
               </View>
             </View>
 
@@ -194,34 +232,18 @@ export default function Contact() {
                 </View>
               </View>
 
-              <Pressable
-                style={styles.websiteCard}
-                onPress={() => Linking.openURL("https://mindvia.vercel.app/")}
-              >
-                <View style={styles.websiteIcon}>
-                  <MaterialCommunityIcons name="web" size={24} color="#4A90A4" />
-                </View>
-                <View style={styles.websiteContent}>
-                  <Text style={styles.websiteLabel}>Официальный сайт</Text>
-                  <Text style={styles.websiteValue}>mindvia.vercel.app</Text>
-                </View>
-                <MaterialCommunityIcons name="arrow-top-right" size={18} color="#9CA3AF" />
-              </Pressable>
-
-              <Pressable
-                style={[styles.websiteCard, styles.whatsappCard]}
-                onPress={() => Linking.openURL("https://wa.me/994505252509")}
-              >
-                <View style={styles.websiteIcon}>
-                  <MaterialCommunityIcons name="whatsapp" size={24} color="#4A90A4" />
-                </View>
-                <View style={styles.websiteContent}>
-                  <Text style={styles.websiteLabel}>WhatsApp</Text>
-                  <Text style={styles.websiteValue}>Написать в WhatsApp</Text>
-                </View>
-                <MaterialCommunityIcons name="arrow-top-right" size={18} color="#9CA3AF" />
-              </Pressable>
             </View>
+
+            {/*
+              Карточка «Официальный сайт» вела на psymindvia.com — этот домен
+              не существует (нет записи whois, DNS не разрешается), поэтому
+              ссылка открывала ошибку. Блок «Социальные сети» состоял из
+              четырёх кнопок вообще без обработчика нажатия.
+
+              Оба блока убраны: неработающая ссылка хуже, чем её отсутствие.
+              Вернуть их можно, как только появятся подтверждённые адреса.
+              Работающие каналы связи — телефон и email — остаются выше.
+            */}
           </ScrollView>
         </KeyboardAvoidingView>
       </View>
@@ -369,6 +391,20 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 4,
     marginTop: 8,
+  },
+  submitButtonDisabled: {
+    opacity: 0.6,
+  },
+  submitHint: {
+    fontSize: 13,
+    color: "rgba(255, 255, 255, 0.7)",
+    marginTop: 12,
+    lineHeight: 18,
+    fontFamily: Platform.select({
+      ios: "Georgia",
+      android: "serif",
+      default: "serif",
+    }),
   },
   submitButtonText: {
     color: "#FFFFFF",

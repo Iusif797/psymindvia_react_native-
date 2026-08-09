@@ -122,17 +122,25 @@ export const auth = {
     await AsyncStorage.removeItem(STORAGE_KEYS.CURRENT_USER);
   },
 
+  /**
+   * Полное удаление аккаунта вместе со всеми локальными данными.
+   *
+   * У приложения нет сервера — учётная запись и все записи хранятся
+   * только на этом устройстве (AsyncStorage). Поэтому «удалить аккаунт»
+   * означает стереть их здесь; после этого от пользователя не остаётся
+   * ничего. Требование App Store Review Guideline 5.1.1(v).
+   */
   async deleteAccount(): Promise<void> {
-    const user = await this.getCurrentUser();
-    if (!user) return;
+    const current = await this.getCurrentUser();
 
-    const users = await this.getUsers();
-    const remainingUsers = users.filter((u) => u.id !== user.id);
-    await AsyncStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(remainingUsers));
-    await AsyncStorage.multiRemove([
-      STORAGE_KEYS.CURRENT_USER,
-      STORAGE_KEYS.AVATAR + "_" + user.id,
-    ]);
+    if (current) {
+      const users = await this.getUsers();
+      const remaining = users.filter((u) => u.id !== current.id);
+      await AsyncStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(remaining));
+      await AsyncStorage.removeItem(STORAGE_KEYS.AVATAR + "_" + current.id);
+    }
+
+    await AsyncStorage.removeItem(STORAGE_KEYS.CURRENT_USER);
   },
 
   async getCurrentUser(): Promise<User | null> {

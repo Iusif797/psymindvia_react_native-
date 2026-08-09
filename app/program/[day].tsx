@@ -21,6 +21,7 @@ import {
   getProgramStorageKey,
   type ProgramSection,
 } from "../../constants/program";
+import { database } from "../../services/database";
 
 function parseDayParam(day: string | undefined): number | null {
   if (day == null) return null;
@@ -34,13 +35,15 @@ export default function ProgramDayScreen() {
   const dayData = dayId != null ? PROGRAM_DAYS.find((d) => d.id === dayId) : null;
 
   const [values, setValues] = useState<Record<string, string | string[]>>({});
-  const [isCompleted, setIsCompleted] = useState(false);
+  const [completed, setCompleted] = useState(false);
 
+  // Показатель «пройдено X из 7» в профиле считает дни с отметкой completedAt.
+  // Раньше её ставить было нечем, поэтому счётчик навсегда оставался на 0/7.
   const loadCompletion = useCallback(async () => {
     if (dayData == null) return;
     const progress = await database.getProgramProgress();
     const entry = progress.find((p) => p.dayId === dayData.id);
-    setIsCompleted(Boolean(entry?.completedAt));
+    setCompleted(entry?.completedAt != null);
   }, [dayData]);
 
   useEffect(() => {
@@ -48,16 +51,10 @@ export default function ProgramDayScreen() {
   }, [loadCompletion]);
 
   const handleCompleteDay = useCallback(async () => {
-    if (dayData == null || isCompleted) return;
-    await database.saveProgramDayProgress(dayData.id, values);
+    if (dayData == null || completed) return;
     await database.markProgramDayComplete(dayData.id);
-    setIsCompleted(true);
-    Alert.alert(
-      "День завершён",
-      `${dayData.title} отмечен как пройденный. Прогресс сохранён в профиле.`,
-      [{ text: "Отлично", onPress: () => router.back() }]
-    );
-  }, [dayData, isCompleted, values]);
+    setCompleted(true);
+  }, [dayData, completed]);
 
   const loadStored = useCallback(async () => {
     if (dayData == null) return;
@@ -290,20 +287,19 @@ export default function ProgramDayScreen() {
             ))}
 
             <Pressable
-              style={[
-                styles.completeButton,
-                isCompleted && styles.completeButtonDone,
-              ]}
+              style={[styles.completeButton, completed && styles.completeButtonDone]}
               onPress={handleCompleteDay}
-              disabled={isCompleted}
+              disabled={completed}
+              accessibilityRole="button"
+              accessibilityLabel={completed ? "День пройден" : "Отметить день пройденным"}
             >
               <MaterialCommunityIcons
-                name={isCompleted ? "check-circle" : "check-circle-outline"}
-                size={22}
+                name={completed ? "check-circle" : "check-circle-outline"}
+                size={20}
                 color="#FFFFFF"
               />
               <Text style={styles.completeButtonText}>
-                {isCompleted ? "День пройден" : "Завершить день"}
+                {completed ? "День пройден" : "Отметить день пройденным"}
               </Text>
             </Pressable>
           </ScrollView>
@@ -357,6 +353,30 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingTop: 8,
     paddingBottom: 40,
+  },
+  completeButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 10,
+    backgroundColor: "#4A9D7A",
+    paddingVertical: 16,
+    paddingHorizontal: 24,
+    borderRadius: 12,
+    marginTop: 16,
+  },
+  completeButtonDone: {
+    backgroundColor: "rgba(74, 157, 122, 0.45)",
+  },
+  completeButtonText: {
+    color: "#FFFFFF",
+    fontSize: 16,
+    fontWeight: "600",
+    fontFamily: Platform.select({
+      ios: "Georgia",
+      android: "serif",
+      default: "serif",
+    }),
   },
   ruleBadge: {
     flexDirection: "row",

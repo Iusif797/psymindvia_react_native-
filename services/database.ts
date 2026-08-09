@@ -138,6 +138,25 @@ export const database = {
     return progress.sort((a, b) => a.dayId - b.dayId);
   },
 
+  /**
+   * Стирает все данные пользователя, созданные приложением:
+   * упражнения, дневник состояния и прогресс 7-дневной программы —
+   * включая «сырые» ключи program_day_*, оставшиеся от старых версий.
+   *
+   * Используется при удалении аккаунта. Ключи авторизации удаляет auth.
+   */
+  async clearAllData(): Promise<void> {
+    const allKeys = await AsyncStorage.getAllKeys();
+    const legacyProgramKeys = allKeys.filter((k) => k.startsWith("program_day_"));
+
+    await AsyncStorage.multiRemove([
+      STORAGE_KEYS.ANTIANXIETY_SESSIONS,
+      STORAGE_KEYS.TRACKER_ENTRIES,
+      STORAGE_KEYS.PROGRAM_PROGRESS,
+      ...legacyProgramKeys,
+    ]);
+  },
+
   async getProfileData(): Promise<ProfileData> {
     const [antianxietySessions, trackerEntries, programProgress] = await Promise.all([
       this.getAntianxietySessions(),

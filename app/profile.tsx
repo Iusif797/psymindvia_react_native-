@@ -133,6 +133,59 @@ export default function ProfileScreen() {
     router.push("/auth");
   };
 
+  /**
+   * Удаление аккаунта. Требование App Store Review Guideline 5.1.1(v):
+   * если приложение даёт создать учётную запись, оно обязано дать её и удалить.
+   *
+   * Сервера у приложения нет — всё лежит на этом устройстве, поэтому
+   * удаление здесь означает полное и окончательное стирание данных.
+   * Спрашиваем подтверждение дважды: отменить это будет невозможно.
+   */
+  const handleDeleteAccount = useCallback(() => {
+    Alert.alert(
+      "Удалить аккаунт?",
+      "Будут безвозвратно удалены ваш аккаунт и все записи: упражнения, дневник состояния и прогресс 7-дневной программы. Данные хранятся только на этом устройстве — восстановить их будет невозможно.",
+      [
+        { text: "Отмена", style: "cancel" },
+        {
+          text: "Удалить",
+          style: "destructive",
+          onPress: () => {
+            Alert.alert(
+              "Точно удалить?",
+              "Это последнее подтверждение. Отменить действие уже нельзя.",
+              [
+                { text: "Отмена", style: "cancel" },
+                {
+                  text: "Удалить навсегда",
+                  style: "destructive",
+                  onPress: async () => {
+                    try {
+                      await database.clearAllData();
+                      await auth.deleteAccount();
+                      setUser(null);
+                      setStats(null);
+                      setAvatarUri(null);
+                      Alert.alert(
+                        "Аккаунт удалён",
+                        "Все ваши данные стёрты с этого устройства."
+                      );
+                    } catch {
+                      Alert.alert(
+                        "Не удалось удалить аккаунт",
+                        "Попробуйте ещё раз. Если ошибка повторяется, напишите нам через раздел «Связаться»."
+                      );
+                    }
+                  },
+                },
+              ]
+            );
+          },
+        },
+      ]
+    );
+  }, []);
+
   const pickImage = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
@@ -459,6 +512,22 @@ export default function ProfileScreen() {
               {stats?.programCompletedDays === 7
                 ? "Вы прошли всю программу!"
                 : `Пройдено ${stats?.programCompletedDays || 0} из 7 дней`}
+            </Text>
+          </View>
+
+          <View style={styles.dangerZone}>
+            <Pressable
+              style={styles.deleteAccountButton}
+              onPress={handleDeleteAccount}
+              accessibilityRole="button"
+              accessibilityLabel="Удалить аккаунт"
+            >
+              <MaterialCommunityIcons name="trash-can-outline" size={18} color="#E5766A" />
+              <Text style={styles.deleteAccountText}>Удалить аккаунт</Text>
+            </Pressable>
+            <Text style={styles.deleteAccountHint}>
+              Аккаунт и все записи хранятся только на этом устройстве и будут
+              удалены безвозвратно.
             </Text>
           </View>
 
@@ -1033,6 +1102,47 @@ const styles = StyleSheet.create({
     fontWeight: "400",
     color: "rgba(255, 255, 255, 0.6)",
     marginBottom: 12,
+    fontFamily: Platform.select({
+      ios: "Georgia",
+      android: "serif",
+      default: "serif",
+    }),
+  },
+  dangerZone: {
+    marginTop: 28,
+    paddingTop: 20,
+    borderTopWidth: 1,
+    borderTopColor: "rgba(255, 255, 255, 0.12)",
+    alignItems: "center",
+  },
+  deleteAccountButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: "rgba(229, 118, 106, 0.5)",
+    backgroundColor: "rgba(229, 118, 106, 0.1)",
+  },
+  deleteAccountText: {
+    fontSize: 15,
+    fontWeight: "600",
+    color: "#E5766A",
+    fontFamily: Platform.select({
+      ios: "Georgia",
+      android: "serif",
+      default: "serif",
+    }),
+  },
+  deleteAccountHint: {
+    fontSize: 12,
+    color: "rgba(255, 255, 255, 0.5)",
+    textAlign: "center",
+    marginTop: 10,
+    lineHeight: 17,
+    paddingHorizontal: 16,
     fontFamily: Platform.select({
       ios: "Georgia",
       android: "serif",
