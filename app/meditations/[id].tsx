@@ -26,7 +26,7 @@ export default function MeditationPlayerScreen() {
   const pulseAnim = useRef(new Animated.Value(1)).current;
   const rotateAnim = useRef(new Animated.Value(0)).current;
   const progressAnim = useRef(new Animated.Value(0)).current;
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const totalSeconds = meditation ? meditation.duration * 60 : 0;
 

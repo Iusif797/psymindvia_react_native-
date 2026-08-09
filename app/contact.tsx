@@ -1,10 +1,56 @@
-import { View, TextInput, Pressable, Text, StyleSheet, ScrollView, StatusBar, Linking, Platform, Dimensions, KeyboardAvoidingView } from "react-native";
+import { useState, useCallback } from "react";
+import { View, TextInput, Pressable, Text, StyleSheet, ScrollView, StatusBar, Linking, Platform, Dimensions, KeyboardAvoidingView, Alert } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import BackgroundWrapper from "../components/BackgroundWrapper";
 
-const { width, height } = Dimensions.get("window");
+const { height } = Dimensions.get("window");
+
+const CONTACT_EMAIL = "teonaxametova5@gmail.com";
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export default function Contact() {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [message, setMessage] = useState("");
+
+  const handleSubmit = useCallback(async () => {
+    if (!name.trim()) {
+      Alert.alert("Заполните форму", "Пожалуйста, укажите ваше имя.");
+      return;
+    }
+    if (!EMAIL_REGEX.test(email.trim())) {
+      Alert.alert("Некорректный email", "Проверьте адрес электронной почты.");
+      return;
+    }
+    if (!message.trim()) {
+      Alert.alert("Заполните форму", "Пожалуйста, напишите сообщение.");
+      return;
+    }
+
+    const subject = encodeURIComponent("Заявка из приложения Psymindvia");
+    const body = encodeURIComponent(
+      `Имя: ${name.trim()}\nEmail: ${email.trim()}\nТелефон: ${phone.trim() || "не указан"}\n\nСообщение:\n${message.trim()}`
+    );
+
+    try {
+      await Linking.openURL(`mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`);
+      setName("");
+      setEmail("");
+      setPhone("");
+      setMessage("");
+      Alert.alert(
+        "Сообщение подготовлено",
+        "Откроется почтовое приложение — нажмите «Отправить», чтобы завершить."
+      );
+    } catch {
+      Alert.alert(
+        "Не удалось открыть почту",
+        `Напишите нам напрямую: ${CONTACT_EMAIL}`
+      );
+    }
+  }, [name, email, phone, message]);
+
   return (
     <BackgroundWrapper>
       <View style={styles.container}>
@@ -39,6 +85,8 @@ export default function Contact() {
                       placeholder="Введите ваше имя"
                       style={styles.input}
                       placeholderTextColor="rgba(255, 255, 255, 0.6)"
+                      value={name}
+                      onChangeText={setName}
                     />
                   </View>
 
@@ -50,6 +98,8 @@ export default function Contact() {
                       keyboardType="email-address"
                       autoCapitalize="none"
                       placeholderTextColor="rgba(255, 255, 255, 0.6)"
+                      value={email}
+                      onChangeText={setEmail}
                     />
                   </View>
                 </View>
@@ -61,6 +111,8 @@ export default function Contact() {
                     style={styles.input}
                     keyboardType="phone-pad"
                     placeholderTextColor="rgba(255, 255, 255, 0.6)"
+                    value={phone}
+                    onChangeText={setPhone}
                   />
                 </View>
 
@@ -73,10 +125,12 @@ export default function Contact() {
                     numberOfLines={6}
                     textAlignVertical="top"
                     placeholderTextColor="rgba(255, 255, 255, 0.6)"
+                    value={message}
+                    onChangeText={setMessage}
                   />
                 </View>
 
-                <Pressable style={styles.submitButton}>
+                <Pressable style={styles.submitButton} onPress={handleSubmit}>
                   <Text style={styles.submitButtonText}>Отправить сообщение</Text>
                   <MaterialCommunityIcons name="send" size={20} color="#FFFFFF" />
                 </Pressable>
@@ -142,35 +196,31 @@ export default function Contact() {
 
               <Pressable
                 style={styles.websiteCard}
-                onPress={() => Linking.openURL("https://www.psymindvia.com/")}
+                onPress={() => Linking.openURL("https://mindvia.vercel.app/")}
               >
                 <View style={styles.websiteIcon}>
                   <MaterialCommunityIcons name="web" size={24} color="#4A90A4" />
                 </View>
                 <View style={styles.websiteContent}>
                   <Text style={styles.websiteLabel}>Официальный сайт</Text>
-                  <Text style={styles.websiteValue}>psymindvia.com</Text>
+                  <Text style={styles.websiteValue}>mindvia.vercel.app</Text>
                 </View>
                 <MaterialCommunityIcons name="arrow-top-right" size={18} color="#9CA3AF" />
               </Pressable>
-            </View>
 
-            <View style={styles.socialSection}>
-              <Text style={styles.sectionTitle}>Социальные сети</Text>
-              <View style={styles.socialContainer}>
-                <Pressable style={styles.socialButton}>
-                  <MaterialCommunityIcons name="instagram" size={24} color="#FFFFFF" />
-                </Pressable>
-                <Pressable style={styles.socialButton}>
-                  <MaterialCommunityIcons name="facebook" size={24} color="#FFFFFF" />
-                </Pressable>
-                <Pressable style={styles.socialButton}>
-                  <MaterialCommunityIcons name="send" size={24} color="#FFFFFF" />
-                </Pressable>
-                <Pressable style={styles.socialButton}>
-                  <MaterialCommunityIcons name="whatsapp" size={24} color="#FFFFFF" />
-                </Pressable>
-              </View>
+              <Pressable
+                style={[styles.websiteCard, styles.whatsappCard]}
+                onPress={() => Linking.openURL("https://wa.me/994505252509")}
+              >
+                <View style={styles.websiteIcon}>
+                  <MaterialCommunityIcons name="whatsapp" size={24} color="#4A90A4" />
+                </View>
+                <View style={styles.websiteContent}>
+                  <Text style={styles.websiteLabel}>WhatsApp</Text>
+                  <Text style={styles.websiteValue}>Написать в WhatsApp</Text>
+                </View>
+                <MaterialCommunityIcons name="arrow-top-right" size={18} color="#9CA3AF" />
+              </Pressable>
             </View>
           </ScrollView>
         </KeyboardAvoidingView>
@@ -402,6 +452,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "rgba(255, 255, 255, 0.2)",
   },
+  whatsappCard: {
+    marginTop: 16,
+  },
   websiteIcon: {
     width: 48,
     height: 48,
@@ -433,25 +486,5 @@ const styles = StyleSheet.create({
       android: "serif",
       default: "serif",
     }),
-  },
-  socialSection: {
-    paddingHorizontal: 24,
-  },
-  socialContainer: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    backgroundColor: "rgba(255, 255, 255, 0.1)",
-    borderRadius: 20,
-    paddingVertical: 20,
-    borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.2)",
-  },
-  socialButton: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    backgroundColor: "rgba(74, 144, 164, 0.2)",
-    alignItems: "center",
-    justifyContent: "center",
   },
 });

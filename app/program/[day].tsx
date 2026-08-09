@@ -9,11 +9,13 @@ import {
   Platform,
   TextInput,
   KeyboardAvoidingView,
+  Alert,
 } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import BackgroundWrapper from "../../components/BackgroundWrapper";
+import { database } from "../../services/database";
 import {
   PROGRAM_DAYS,
   getProgramStorageKey,
@@ -32,6 +34,30 @@ export default function ProgramDayScreen() {
   const dayData = dayId != null ? PROGRAM_DAYS.find((d) => d.id === dayId) : null;
 
   const [values, setValues] = useState<Record<string, string | string[]>>({});
+  const [isCompleted, setIsCompleted] = useState(false);
+
+  const loadCompletion = useCallback(async () => {
+    if (dayData == null) return;
+    const progress = await database.getProgramProgress();
+    const entry = progress.find((p) => p.dayId === dayData.id);
+    setIsCompleted(Boolean(entry?.completedAt));
+  }, [dayData]);
+
+  useEffect(() => {
+    loadCompletion();
+  }, [loadCompletion]);
+
+  const handleCompleteDay = useCallback(async () => {
+    if (dayData == null || isCompleted) return;
+    await database.saveProgramDayProgress(dayData.id, values);
+    await database.markProgramDayComplete(dayData.id);
+    setIsCompleted(true);
+    Alert.alert(
+      "День завершён",
+      `${dayData.title} отмечен как пройденный. Прогресс сохранён в профиле.`,
+      [{ text: "Отлично", onPress: () => router.back() }]
+    );
+  }, [dayData, isCompleted, values]);
 
   const loadStored = useCallback(async () => {
     if (dayData == null) return;
@@ -262,6 +288,24 @@ export default function ProgramDayScreen() {
                 )}
               </View>
             ))}
+
+            <Pressable
+              style={[
+                styles.completeButton,
+                isCompleted && styles.completeButtonDone,
+              ]}
+              onPress={handleCompleteDay}
+              disabled={isCompleted}
+            >
+              <MaterialCommunityIcons
+                name={isCompleted ? "check-circle" : "check-circle-outline"}
+                size={22}
+                color="#FFFFFF"
+              />
+              <Text style={styles.completeButtonText}>
+                {isCompleted ? "День пройден" : "Завершить день"}
+              </Text>
+            </Pressable>
           </ScrollView>
         </KeyboardAvoidingView>
       </View>
@@ -533,6 +577,39 @@ const styles = StyleSheet.create({
     color: "rgba(255, 255, 255, 0.7)",
     textAlign: "center",
     marginTop: 40,
+    fontFamily: Platform.select({
+      ios: "Georgia",
+      android: "serif",
+      default: "serif",
+    }),
+  },
+  completeButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 10,
+    backgroundColor: "#4A9D7A",
+    paddingVertical: 16,
+    borderRadius: 16,
+    marginTop: 8,
+    ...Platform.select({
+      ios: {
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.2,
+        shadowRadius: 8,
+      },
+      android: { elevation: 4 },
+      default: {},
+    }),
+  },
+  completeButtonDone: {
+    backgroundColor: "rgba(74, 157, 122, 0.45)",
+  },
+  completeButtonText: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#FFFFFF",
     fontFamily: Platform.select({
       ios: "Georgia",
       android: "serif",

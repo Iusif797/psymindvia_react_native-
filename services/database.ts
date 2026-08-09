@@ -152,6 +152,17 @@ export const database = {
     };
   },
 
+  async clearAllData(): Promise<void> {
+    const allKeys = await AsyncStorage.getAllKeys();
+    const programDayKeys = allKeys.filter((key) => key.startsWith("program_day_"));
+    await AsyncStorage.multiRemove([
+      STORAGE_KEYS.ANTIANXIETY_SESSIONS,
+      STORAGE_KEYS.TRACKER_ENTRIES,
+      STORAGE_KEYS.PROGRAM_PROGRESS,
+      ...programDayKeys,
+    ]);
+  },
+
   async getProfileStats() {
     const data = await this.getProfileData();
 

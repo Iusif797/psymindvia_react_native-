@@ -122,6 +122,19 @@ export const auth = {
     await AsyncStorage.removeItem(STORAGE_KEYS.CURRENT_USER);
   },
 
+  async deleteAccount(): Promise<void> {
+    const user = await this.getCurrentUser();
+    if (!user) return;
+
+    const users = await this.getUsers();
+    const remainingUsers = users.filter((u) => u.id !== user.id);
+    await AsyncStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(remainingUsers));
+    await AsyncStorage.multiRemove([
+      STORAGE_KEYS.CURRENT_USER,
+      STORAGE_KEYS.AVATAR + "_" + user.id,
+    ]);
+  },
+
   async getCurrentUser(): Promise<User | null> {
     const data = await AsyncStorage.getItem(STORAGE_KEYS.CURRENT_USER);
     return data ? JSON.parse(data) : null;

@@ -104,6 +104,31 @@ export default function ProfileScreen() {
     setStats(null);
   }, []);
 
+  const handleDeleteAccount = useCallback(() => {
+    Alert.alert(
+      "Удалить аккаунт?",
+      "Аккаунт и все ваши данные (прогресс программы, записи трекера, история упражнений) будут безвозвратно удалены с устройства.",
+      [
+        { text: "Отмена", style: "cancel" },
+        {
+          text: "Удалить",
+          style: "destructive",
+          onPress: async () => {
+            await database.clearAllData();
+            await auth.deleteAccount();
+            setUser(null);
+            setStats(null);
+            setAvatarUri(null);
+            Alert.alert(
+              "Аккаунт удалён",
+              "Все ваши данные полностью удалены."
+            );
+          },
+        },
+      ]
+    );
+  }, []);
+
   const handleGoToAuth = () => {
     router.push("/auth");
   };
@@ -260,10 +285,16 @@ export default function ProfileScreen() {
             </Pressable>
             <Text style={styles.profileTitle}>Мой профиль</Text>
             <Text style={styles.profileEmail}>{user.email}</Text>
-            <Pressable style={styles.logoutButton} onPress={handleLogout}>
-              <MaterialCommunityIcons name="logout" size={18} color="rgba(255, 255, 255, 0.6)" />
-              <Text style={styles.logoutButtonText}>Выйти</Text>
-            </Pressable>
+            <View style={styles.accountActions}>
+              <Pressable style={styles.logoutButton} onPress={handleLogout}>
+                <MaterialCommunityIcons name="logout" size={18} color="rgba(255, 255, 255, 0.6)" />
+                <Text style={styles.logoutButtonText}>Выйти</Text>
+              </Pressable>
+              <Pressable style={styles.deleteButton} onPress={handleDeleteAccount}>
+                <MaterialCommunityIcons name="trash-can-outline" size={18} color="#E07A76" />
+                <Text style={styles.deleteButtonText}>Удалить аккаунт</Text>
+              </Pressable>
+            </View>
           </View>
 
           <View style={styles.statsGrid}>
@@ -1023,6 +1054,31 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: "500",
     color: "rgba(255, 255, 255, 0.6)",
+    fontFamily: Platform.select({
+      ios: "Georgia",
+      android: "serif",
+      default: "serif",
+    }),
+  },
+  accountActions: {
+    flexDirection: "row",
+    gap: 12,
+  },
+  deleteButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    paddingVertical: 10,
+    paddingHorizontal: 18,
+    backgroundColor: "rgba(224, 122, 118, 0.12)",
+    borderRadius: 24,
+    borderWidth: 1,
+    borderColor: "rgba(224, 122, 118, 0.25)",
+  },
+  deleteButtonText: {
+    fontSize: 13,
+    fontWeight: "500",
+    color: "#E07A76",
     fontFamily: Platform.select({
       ios: "Georgia",
       android: "serif",

@@ -1,3 +1,4 @@
+import { useState, useCallback } from "react";
 import {
   View,
   Text,
@@ -7,9 +8,10 @@ import {
   StatusBar,
   Platform,
 } from "react-native";
-import { router } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import BackgroundWrapper from "../../components/BackgroundWrapper";
+import { database } from "../../services/database";
 import { PROGRAM_DAYS } from "../../constants/program";
 
 const DAY_ICONS: Record<number, keyof typeof MaterialCommunityIcons.glyphMap> = {
@@ -23,6 +25,23 @@ const DAY_ICONS: Record<number, keyof typeof MaterialCommunityIcons.glyphMap> = 
 };
 
 export default function ProgramIndexScreen() {
+  const [completedDayIds, setCompletedDayIds] = useState<Set<number>>(new Set());
+
+  useFocusEffect(
+    useCallback(() => {
+      let isActive = true;
+      database.getProgramProgress().then((progress) => {
+        if (!isActive) return;
+        setCompletedDayIds(
+          new Set(progress.filter((p) => p.completedAt).map((p) => p.dayId))
+        );
+      });
+      return () => {
+        isActive = false;
+      };
+    }, [])
+  );
+
   const handleDayPress = (dayId: number) => {
     router.push(`/program/${dayId}` as any);
   };
@@ -61,14 +80,20 @@ export default function ProgramIndexScreen() {
               >
                 <View style={styles.dayIconWrap}>
                   <MaterialCommunityIcons
-                    name={DAY_ICONS[day.id] ?? "circle-outline"}
+                    name={
+                      completedDayIds.has(day.id)
+                        ? "check-circle"
+                        : DAY_ICONS[day.id] ?? "circle-outline"
+                    }
                     size={24}
-                    color="#4A9D7A"
+                    color={completedDayIds.has(day.id) ? "#5BB89A" : "#4A9D7A"}
                   />
                 </View>
                 <View style={styles.dayContent}>
                   <Text style={styles.dayTitle}>{day.title}</Text>
-                  <Text style={styles.daySubtitle}>{day.subtitle}</Text>
+                  <Text style={styles.daySubtitle}>
+                    {completedDayIds.has(day.id) ? "Пройдено ✓" : day.subtitle}
+                  </Text>
                 </View>
                 <MaterialCommunityIcons
                   name="chevron-right"

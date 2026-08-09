@@ -10,7 +10,7 @@ export interface MeditationSession {
 }
 
 class AudioService {
-  private sleepTimer: NodeJS.Timeout | null = null;
+  private sleepTimer: ReturnType<typeof setTimeout> | null = null;
   private isPlaying = false;
   private currentSoundId: string | null = null;
   private volume = 0.7;

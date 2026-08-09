@@ -38,6 +38,10 @@ yarn-error.*
 
 app-example
 
+google-play-key.json
+credentials.json
+credentials/
+
 # generated native folders
 /ios
 /android
