@@ -21,6 +21,23 @@
     }
   },
   "submit": {
-    "production": {}
+    "production": {
+      "android": {
+        "serviceAccountKeyPath": "./google-play-key.json",
+        "track": "production"
+      }
+    },
+    "beta": {
+      "android": {
+        "serviceAccountKeyPath": "./google-play-key.json",
+        "track": "beta"
+      }
+    },
+    "internal": {
+      "android": {
+        "serviceAccountKeyPath": "./google-play-key.json",
+        "track": "internal"
+      }
+    }
   }
 }
