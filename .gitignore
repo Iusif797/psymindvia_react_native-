@@ -49,3 +49,5 @@ credentials/
 # local signing credentials (Safe #2556) — nikdy do gitu
 credentials.json
 credentials/
+credentials.json.bak-*
+credentials.json.*
