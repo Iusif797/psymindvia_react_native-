@@ -1,0 +1,17 @@
+# Gitleaks allowlist — pouze prokazatelné ne-tajemství (realizace #357, 2026-08-12).
+# Skutečná tajemství (ASC .p8 klíč, Play service account, keystore) v repu nejsou —
+# žijí v ~/.config na serverech a v Safe (#2556). Historické nálezy v credentials.json
+# (commity 0ed2ee9, a76a8c0) řeší rotace upload klíče ze Safe #2556 (ukol #189).
+
+title = "teona gitleaks config"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Falešné poplachy: veřejné App Store Connect identifikátory v eas.json"
+regexes = [
+  # ASC API Key ID / Issuer ID — identifikátory, ne klíč; klíč je .p8 mimo repo (ascApiKeyPath)
+  '''U4ZPDU72CX''',
+  '''7b36a191-62bd-4525-a45d-38b877493538''',
+]
