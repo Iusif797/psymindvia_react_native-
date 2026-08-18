@@ -44,9 +44,9 @@ export default function MeditationsScreen() {
   );
 
   useEffect(() => {
-    const soundId = audioService.getCurrentSoundId();
-    setPlayingSound(soundId);
+    setPlayingSound(audioService.getCurrentSoundId());
     setVolume(audioService.getVolume());
+    setSleepTimer(audioService.getSleepTimerMinutes());
   }, []);
 
   const loadStats = async () => {
@@ -66,10 +66,11 @@ export default function MeditationsScreen() {
     if (playingSound === sound.id) {
       await audioService.stopSound();
       setPlayingSound(null);
-    } else {
-      await audioService.playSound(sound.id);
-      setPlayingSound(sound.id);
+      setSleepTimer(0);
+      return;
     }
+    const started = await audioService.playSound(sound.id);
+    setPlayingSound(started ? sound.id : null);
   };
 
   const handleVolumeChange = async (value: number) => {

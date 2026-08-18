@@ -12,7 +12,8 @@
       "bundleIdentifier": "com.mindvia.psymindvia",
       "supportsTablet": true,
       "infoPlist": {
-        "ITSAppUsesNonExemptEncryption": false
+        "ITSAppUsesNonExemptEncryption": false,
+        "UIBackgroundModes": ["audio"]
       }
     },
     "android": {
@@ -40,6 +41,13 @@
           "dark": {
             "backgroundColor": "#1a1a2e"
           }
+        }
+      ],
+      [
+        "expo-audio",
+        {
+          "microphonePermission": false,
+          "recordAudioAndroid": false
         }
       ]
     ],
