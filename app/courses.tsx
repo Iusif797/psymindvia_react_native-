@@ -1,6 +1,4 @@
-import { View, Text, StyleSheet, ScrollView, Pressable, StatusBar, Platform, Dimensions } from "react-native";
-import { Link } from "expo-router";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { View, Text, StyleSheet, ScrollView, StatusBar, Platform, Dimensions } from "react-native";
 import BackgroundWrapper from "../components/BackgroundWrapper";
 
 const { height } = Dimensions.get("window");
@@ -9,8 +7,6 @@ type Course = {
   title: string;
   subtitle: string;
   meta: { label: string; value: string }[];
-  cta: string;
-  price: string;
   accent: string;
 };
 
@@ -24,8 +20,6 @@ const courses: Course[] = [
       { label: "Длительность", value: "2,5 месяца" },
       { label: "Тип", value: "семинар" },
     ],
-    cta: "Оставить заявку",
-    price: "600 $",
     accent: "#4A90A4",
   },
   {
@@ -35,8 +29,6 @@ const courses: Course[] = [
       { label: "Формат", value: "по программе" },
       { label: "Фокус", value: "семейные и системные динамики" },
     ],
-    cta: "Оставить заявку",
-    price: "500 $",
     accent: "#7B6B8E",
   },
   {
@@ -48,8 +40,6 @@ const courses: Course[] = [
       { label: "Длительность", value: "2 месяца" },
       { label: "Тип", value: "семинар" },
     ],
-    cta: "Оставить заявку",
-    price: "от 300 $",
     accent: "#C08450",
   },
   {
@@ -61,8 +51,6 @@ const courses: Course[] = [
       { label: "Длительность", value: "7 недель" },
       { label: "Тип", value: "интенсив" },
     ],
-    cta: "Оставить заявку",
-    price: "650 $",
     accent: "#4A9D7A",
   },
   {
@@ -74,8 +62,6 @@ const courses: Course[] = [
       { label: "Длительность", value: "6 месяцев" },
       { label: "Тип", value: "курс" },
     ],
-    cta: "Оставить заявку",
-    price: "500 $",
     accent: "#6B8EAD",
   },
   {
@@ -85,10 +71,8 @@ const courses: Course[] = [
       { label: "Формат", value: "лекции + практика" },
       { label: "Старт", value: "Открыт набор" },
       { label: "Длительность", value: "6 месяцев" },
-      { label: "Стоимость", value: "уточняется" },
+      { label: "Тип", value: "курс" },
     ],
-    cta: "Оставить заявку",
-    price: "Уточняется",
     accent: "#D97A7A",
   },
   {
@@ -100,8 +84,6 @@ const courses: Course[] = [
       { label: "Длительность", value: "42 ак. часа" },
       { label: "Тип", value: "курс" },
     ],
-    cta: "Оставить заявку",
-    price: "600 $",
     accent: "#4A90A4",
   },
   {
@@ -114,8 +96,6 @@ const courses: Course[] = [
       { label: "Длительность", value: "16 занятий" },
       { label: "Тип", value: "курс" },
     ],
-    cta: "Оставить заявку",
-    price: "500 $",
     accent: "#7B6B8E",
   },
 ];
@@ -166,21 +146,6 @@ export default function Courses() {
                       </Text>
                     </View>
                   ))}
-                </View>
-
-                <View style={styles.cardBottom}>
-                  <View style={styles.priceWrap}>
-                    <Text style={styles.priceLabel}>Стоимость</Text>
-                    <Text style={styles.priceValue} numberOfLines={1} ellipsizeMode="tail">
-                      {course.price}
-                    </Text>
-                  </View>
-                  <Link href="/contact" asChild>
-                    <Pressable style={[styles.ctaButton, { backgroundColor: course.accent }]}>
-                      <Text style={styles.ctaText}>{course.cta}</Text>
-                      <MaterialCommunityIcons name="arrow-right" size={18} color="#FFFFFF" />
-                    </Pressable>
-                  </Link>
                 </View>
               </View>
           ))}
@@ -290,7 +255,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     gap: 10,
-    marginBottom: 18,
   },
   metaItem: {
     width: "48%",
@@ -316,65 +280,6 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     color: "rgba(255, 255, 255, 0.7)",
     lineHeight: 20,
-    fontFamily: Platform.select({
-      ios: "Georgia",
-      android: "serif",
-      default: "serif",
-    }),
-  },
-  cardBottom: {
-    flexDirection: "row",
-    alignItems: "stretch",
-    justifyContent: "space-between",
-    gap: 14,
-    minHeight: 52,
-  },
-  priceWrap: {
-    flex: 1,
-    justifyContent: "center",
-    minWidth: 0,
-  },
-  priceLabel: {
-    fontSize: 12,
-    fontWeight: "700",
-    color: "rgba(255, 255, 255, 0.6)",
-    marginBottom: 6,
-    fontFamily: Platform.select({
-      ios: "Georgia",
-      android: "serif",
-      default: "serif",
-    }),
-  },
-  priceValue: {
-    fontSize: 18,
-    fontWeight: "700",
-    color: "#FFFFFF",
-    fontFamily: Platform.select({
-      ios: "Georgia",
-      android: "serif",
-      default: "serif",
-    }),
-  },
-  ctaButton: {
-    paddingVertical: 14,
-    paddingHorizontal: 20,
-    borderRadius: 14,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 8,
-    minHeight: 52,
-    flexShrink: 0,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
-    elevation: 3,
-  },
-  ctaText: {
-    color: "#FFFFFF",
-    fontSize: 15,
-    fontWeight: "700",
     fontFamily: Platform.select({
       ios: "Georgia",
       android: "serif",

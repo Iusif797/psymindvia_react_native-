@@ -49,8 +49,19 @@
           "microphonePermission": false,
           "recordAudioAndroid": false
         }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "The app accesses your photo library only when you choose to set a profile picture. For example, you can select an existing photo from your library and it will be shown as your avatar on the Profile screen.",
+          "cameraPermission": false,
+          "microphonePermission": false
+        }
       ]
     ],
+    "locales": {
+      "ru": "./locales/ru.json"
+    },
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
