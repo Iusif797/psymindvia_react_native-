@@ -98,7 +98,6 @@ function DrawerItemRow({
 
   const animatedRowStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],
-    backgroundColor: focused ? activeBgColor : inactiveBgColor,
   }));
 
   const animatedIconWrap = useAnimatedStyle(() => ({
@@ -121,7 +120,13 @@ function DrawerItemRow({
   const color = focused ? activeTintColor : inactiveTintColor;
 
   return (
-    <Animated.View style={[styles.drawerItemRow, animatedRowStyle]}>
+    <Animated.View
+      style={[
+        styles.drawerItemRow,
+        { backgroundColor: focused ? activeBgColor : inactiveBgColor },
+        animatedRowStyle,
+      ]}
+    >
       <TouchableOpacity
         activeOpacity={1}
         onPress={onPress}

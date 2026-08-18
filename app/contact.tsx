@@ -35,10 +35,6 @@ export default function Contact() {
 
     try {
       await Linking.openURL(`mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`);
-      setName("");
-      setEmail("");
-      setPhone("");
-      setMessage("");
       Alert.alert(
         "Сообщение подготовлено",
         "Откроется почтовое приложение — нажмите «Отправить», чтобы завершить."
@@ -79,7 +75,7 @@ export default function Contact() {
                 <Text style={styles.formTitle}>Отправить сообщение</Text>
 
                 <View style={styles.inputGroup}>
-                  <View style={styles.inputContainer}>
+                  <View style={[styles.inputContainer, styles.inputHalf]}>
                     <Text style={styles.label}>Ваше имя *</Text>
                     <TextInput
                       placeholder="Введите ваше имя"
@@ -90,7 +86,7 @@ export default function Contact() {
                     />
                   </View>
 
-                  <View style={styles.inputContainer}>
+                  <View style={[styles.inputContainer, styles.inputHalf]}>
                     <Text style={styles.label}>Email *</Text>
                     <TextInput
                       placeholder="example@email.com"
@@ -324,6 +320,10 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     marginBottom: 20,
+  },
+  inputHalf: {
+    flex: 1,
+    minWidth: 0,
   },
   label: {
     fontSize: 15,
