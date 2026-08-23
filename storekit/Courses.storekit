@@ -1,0 +1,186 @@
+{
+  "identifier" : "Courses",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+    {
+      "displayPrice" : "599.99",
+      "familyShareable" : false,
+      "internalID" : "4935A846-3860-4269-8B41-E97C2365ACDB",
+      "localizations" : [
+        {
+          "description" : "Systemic constellations seminar by Bert Hellinger method.",
+          "displayName" : "Systemic Constellations",
+          "locale" : "en_US"
+        },
+        {
+          "description" : "Семинар по системным расстановкам по Берту Хеллингеру.",
+          "displayName" : "Системные расстановки",
+          "locale" : "ru"
+        }
+      ],
+      "productID" : "com.mindvia.teona.course.sistemnye-rasstanovki",
+      "referenceName" : "Systemic Constellations",
+      "type" : "NonConsumable"
+    },
+    {
+      "displayPrice" : "499.99",
+      "familyShareable" : false,
+      "internalID" : "E6A4D02B-58B7-4C42-AA08-CF74B06EA8B4",
+      "localizations" : [
+        {
+          "description" : "Advanced family and systemic constellation practice.",
+          "displayName" : "Mastery of Constellations",
+          "locale" : "en_US"
+        },
+        {
+          "description" : "Углублённая практика семейных и системных расстановок.",
+          "displayName" : "Мастерство расстановок",
+          "locale" : "ru"
+        }
+      ],
+      "productID" : "com.mindvia.teona.course.masterstvo-rasstanovok",
+      "referenceName" : "Mastery of Constellations",
+      "type" : "NonConsumable"
+    },
+    {
+      "displayPrice" : "299.99",
+      "familyShareable" : false,
+      "internalID" : "C87C5AAA-4A9F-484C-8F29-A781C4EBD9F3",
+      "localizations" : [
+        {
+          "description" : "NLP Practitioner techniques for communication and change.",
+          "displayName" : "NLP Practitioner",
+          "locale" : "en_US"
+        },
+        {
+          "description" : "Практический курс НЛП: коммуникация и личностный рост.",
+          "displayName" : "НЛП Практик",
+          "locale" : "ru"
+        }
+      ],
+      "productID" : "com.mindvia.teona.course.nlp-praktik",
+      "referenceName" : "NLP Practitioner",
+      "type" : "NonConsumable"
+    },
+    {
+      "displayPrice" : "649.99",
+      "familyShareable" : false,
+      "internalID" : "C6AD989E-2412-4808-9E30-8CF62EC012C6",
+      "localizations" : [
+        {
+          "description" : "Regression therapy intensive for soul memory work.",
+          "displayName" : "Regression Intensive",
+          "locale" : "en_US"
+        },
+        {
+          "description" : "Интенсив по регрессивной терапии и памяти души.",
+          "displayName" : "Регрессия",
+          "locale" : "ru"
+        }
+      ],
+      "productID" : "com.mindvia.teona.course.regressiya",
+      "referenceName" : "Regression Intensive",
+      "type" : "NonConsumable"
+    },
+    {
+      "displayPrice" : "499.99",
+      "familyShareable" : false,
+      "internalID" : "0D35598D-D88F-4A73-873D-79B5EA756D03",
+      "localizations" : [
+        {
+          "description" : "Six-month practical psychology training program.",
+          "displayName" : "Practical Psychology",
+          "locale" : "en_US"
+        },
+        {
+          "description" : "Шестимесячный курс практической психологии.",
+          "displayName" : "Практическая психология",
+          "locale" : "ru"
+        }
+      ],
+      "productID" : "com.mindvia.teona.course.prakticheskaya-psihologiya",
+      "referenceName" : "Practical Psychology",
+      "type" : "NonConsumable"
+    },
+    {
+      "displayPrice" : "499.99",
+      "familyShareable" : false,
+      "internalID" : "B2CD9C99-20B9-4607-9C21-39B6AB8CC6F1",
+      "localizations" : [
+        {
+          "description" : "Counseling stages from first contact to session close.",
+          "displayName" : "Counseling Stages",
+          "locale" : "en_US"
+        },
+        {
+          "description" : "Этапы психологического консультирования: от контакта до завершения.",
+          "displayName" : "Этапы консультирования",
+          "locale" : "ru"
+        }
+      ],
+      "productID" : "com.mindvia.teona.course.etapy-psihologicheskogo-konsultirovaniya",
+      "referenceName" : "Counseling Stages",
+      "type" : "NonConsumable"
+    },
+    {
+      "displayPrice" : "599.99",
+      "familyShareable" : false,
+      "internalID" : "3203A4F7-D268-4BFB-95D6-8AAA1E3579A6",
+      "localizations" : [
+        {
+          "description" : "Cognitive behavioral therapy course, 42 academic hours.",
+          "displayName" : "CBT Course",
+          "locale" : "en_US"
+        },
+        {
+          "description" : "Практический курс когнитивно-поведенческой терапии.",
+          "displayName" : "КПТ",
+          "locale" : "ru"
+        }
+      ],
+      "productID" : "com.mindvia.teona.course.kognitivno-povedencheskaya-terapiya",
+      "referenceName" : "CBT Course",
+      "type" : "NonConsumable"
+    },
+    {
+      "displayPrice" : "499.99",
+      "familyShareable" : false,
+      "internalID" : "96E4C6B5-4633-416F-B6B7-79ADB5C9DE4A",
+      "localizations" : [
+        {
+          "description" : "Psychosomatics and neuropsychology, 16 sessions.",
+          "displayName" : "Psychosomatics",
+          "locale" : "en_US"
+        },
+        {
+          "description" : "Курс по психосоматике и регуляции нервной системы.",
+          "displayName" : "Психосоматика",
+          "locale" : "ru"
+        }
+      ],
+      "productID" : "com.mindvia.teona.course.psihosomatika-i-neiropsihologiya",
+      "referenceName" : "Psychosomatics",
+      "type" : "NonConsumable"
+    }
+  ],
+  "settings" : {
+    "_failTransactionsEnabled" : false,
+    "_storefront" : "USA",
+    "_storeKitErrors" : [
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Load Products"
+      }
+    ]
+  },
+  "subscriptionGroups" : [
+
+  ],
+  "version" : {
+    "major" : 3,
+    "minor" : 0
+  }
+}

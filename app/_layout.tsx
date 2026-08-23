@@ -109,13 +109,20 @@ function RootLayoutContent() {
           }}
         />
         <Drawer.Screen
-          name="courses"
+          name="courses/index"
           options={{
             title: "Обучение",
             drawerLabel: "Обучение",
             drawerIcon: ({ color, size }) => (
               <MaterialCommunityIcons name="school-outline" color={color} size={size} />
             ),
+          }}
+        />
+        <Drawer.Screen
+          name="courses/[slug]"
+          options={{
+            title: "Курс",
+            drawerItemStyle: { display: "none" },
           }}
         />
         <Drawer.Screen

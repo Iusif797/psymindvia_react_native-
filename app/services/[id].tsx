@@ -148,9 +148,11 @@ export default function ServiceDetail() {
             ))}
           </View>
           
-          <Link href="/contact" asChild>
+          <Link href={id === "6" ? "/courses" : "/contact"} asChild>
             <Pressable style={[styles.ctaButton, { backgroundColor: service.color }]}>
-              <Text style={styles.ctaButtonText}>Записаться на консультацию</Text>
+              <Text style={styles.ctaButtonText}>
+                {id === "6" ? "Открыть курсы" : "Записаться на консультацию"}
+              </Text>
               <MaterialCommunityIcons name="arrow-right" size={20} color="#FFFFFF" />
             </Pressable>
           </Link>
