@@ -1,0 +1,118 @@
+PROPRIETÁRNÍ LICENCE — IT ENTERPRISE SOLUTIONS
+Verze 1.0, platná od 15. 9. 2026
+
+Copyright (c) 2026 IT-Enterprise Solutions. Všechna práva vyhrazena.
+All rights reserved.
+
+
+1. PŘEDMĚT OCHRANY
+
+Tato licence se vztahuje na veškerý obsah tohoto repozitáře a na vše, co z něj
+vychází, zejména na:
+
+  a) zdrojový kód, skripty, konfigurace, datové struktury a schémata databází;
+  b) dokumentaci, návody, runbooky a wiki obsah;
+  c) ARCHITEKTURU, návrhové vzory, postupy, procesy a KONCEPTY v něm obsažené;
+  d) grafické podklady, texty rozhraní a překlady;
+  e) sestavené (zkompilované) i jinak odvozené podoby výše uvedeného.
+
+Ochrana podle písmene c) je uplatněna výslovně: chráněn není pouze zápis, ale
+také myšlenkové řešení, které je v díle vyjádřeno.
+
+
+2. ZÁKAZY
+
+Bez předchozího výslovného písemného souhlasu držitele práv je ZAKÁZÁNO:
+
+  a) rozmnožovat, kopírovat nebo jinak zaznamenávat dílo či jeho část;
+  b) rozšiřovat, sdílet, zveřejňovat, publikovat ani zpřístupňovat dílo
+     třetí osobě, a to ani bezplatně;
+  c) vytvářet díla odvozená, upravovat je nebo z nich vycházet;
+  d) přebírat architekturu, postupy, procesy nebo koncepty díla a použít je
+     v jiném řešení, a to i tehdy, je-li výsledek zapsán vlastním kódem;
+  e) provádět zpětnou analýzu, dekompilaci nebo rozklad díla;
+  f) používat dílo nebo jeho části k trénování, ladění či vyhodnocování
+     systémů strojového učení a umělé inteligence;
+  g) odstraňovat nebo měnit údaje o autorství a licenci.
+
+
+3. POVOLENÉ UŽITÍ
+
+  a) Zaměstnanci, spolupracovníci a pověření agenti držitele práv smějí dílo
+     užívat výhradně pro potřeby držitele práv a v rozsahu přidělených
+     oprávnění.
+  b) Zákazníkovi, kterému držitel práv dílo nasadí, náleží nevýhradní,
+     nepřevoditelné a kdykoli odvolatelné právo provozovat nasazenou instalaci
+     pro vlastní vnitřní potřebu, po dobu trvání smluvního vztahu.
+     Toto právo nezahrnuje žádné z jednání zakázaných v článku 2.
+  c) Jakékoli jiné užití vyžaduje samostatnou písemnou smlouvu.
+
+
+3a. TESTOVACÍ FÁZE DO 1. 1. 2027
+
+  Do 1. ledna 2027 je dílo ve fázi vývoje a ověřování. Do tohoto dne:
+
+  a) není poskytováno zákazníkům k produkčnímu provozu;
+  b) veškeré instalace u třetích osob jsou pouze zkušební a nezakládají
+     nárok na dostupnost, funkčnost ani podporu;
+  c) držitel práv může dílo kdykoli změnit, omezit nebo odstavit bez
+     předchozího upozornění.
+
+  Právo podle článku 3 písm. b) vzniká zákazníkovi až dnem zahájení
+  produkčního provozu, nejdříve 1. 1. 2027, a to na základě písemné smlouvy.
+
+
+4. DŮVĚRNOST
+
+Dílo je obchodním tajemstvím držitele práv. Každý, komu je zpřístupněno, je
+povinen zachovávat mlčenlivost a chránit je před přístupem třetích osob,
+a to i po skončení spolupráce nebo smluvního vztahu.
+
+
+5. BEZ ZÁRUKY
+
+Dílo je poskytováno „tak, jak je“. Držitel práv neposkytuje žádné záruky
+a neodpovídá za škodu vzniklou užitím díla, není-li písemně dohodnuto jinak.
+
+
+6. UKONČENÍ
+
+Porušením kterékoli povinnosti podle této licence oprávnění zaniká okamžitě
+a bez upozornění. Povinnost mlčenlivosti podle článku 4 trvá i po zániku
+oprávnění.
+
+
+7. ROZHODNÉ PRÁVO
+
+Licence se řídí právním řádem České republiky. Spory rozhodují české soudy.
+
+
+KONTAKT
+IT-Enterprise Solutions — dev@it-enterprise.cz
+
+
+────────────────────────────────────────────────────────────────────────────
+ENGLISH SUMMARY (the Czech text above prevails)
+
+Proprietary and confidential. Copyright (c) 2026 IT-Enterprise Solutions.
+All rights reserved.
+
+You may NOT copy, distribute, publish, modify, create derivative works,
+reverse engineer, or use this work for training machine-learning systems.
+Protection expressly extends to the ARCHITECTURE, METHODS AND CONCEPTS
+expressed herein, not merely to the source text: reimplementing the same
+solution in your own code is equally prohibited.
+
+DEVELOPMENT PHASE UNTIL 1 JANUARY 2027: this work is under development and
+evaluation. Until that date it is not released to customers for production
+use; any third-party installation is a trial only, carries no warranty of
+availability, functionality or support, and may be changed or withdrawn at
+any time without notice.
+
+From the start of production use (no earlier than 1 January 2027), and only
+under a written agreement, customers of IT-Enterprise Solutions receive a
+non-exclusive, non-transferable, revocable right to operate the deployed
+installation for their own internal use for the duration of their contract,
+and nothing more.
+
+Any other use requires a separate written agreement.
