@@ -1,9 +1,19 @@
-PROPRIETÁRNÍ LICENCE — IT ENTERPRISE SOLUTIONS
-Verze 1.0, platná od 15. 9. 2026
+PROPRIETÁRNÍ LICENCE — IT ENTERPRISE SOLUTION S.R.O.
+Verze 1.1, platná od 16. 9. 2026
+Nahrazuje verzi 1.0 ze dne 15. 9. 2026.
 
-Copyright (c) 2026 IT-Enterprise Solutions. Všechna práva vyhrazena.
-All rights reserved.
+Copyright (c) 2026 IT Enterprise Solution s.r.o. Všechna práva vyhrazena.
 
+
+⚠️  PRÁVNÍ UPOZORNĚNÍ — TEXT PŘIPRAVIL VNITŘNÍ TÝM, NIKOLIV PRÁVNÍK.
+    Přesné znění by měl před nasazením do smluvních vztahů s klienty
+    schválit advokát nebo advokátní kancelář. Tato potřeba je vedena jako
+    otevřená otázka v úkolu #14441 (kokpit.it-enterprise.pro).
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ČESKY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 1. PŘEDMĚT OCHRANY
 
@@ -16,8 +26,10 @@ vychází, zejména na:
   d) grafické podklady, texty rozhraní a překlady;
   e) sestavené (zkompilované) i jinak odvozené podoby výše uvedeného.
 
-Ochrana podle písmene c) je uplatněna výslovně: chráněn není pouze zápis, ale
-také myšlenkové řešení, které je v díle vyjádřeno.
+Ochrana podle písmene c) je uplatněna výslovně: chráněn není pouze textový
+zápis díla, ale také myšlenkové řešení, architektura a postup, který je v díle
+vyjádřen. Reimplementace téhož řešení vlastním kódem nebo v jiném jazyce je
+rovněž zakázána.
 
 
 2. ZÁKAZY
@@ -36,83 +48,229 @@ Bez předchozího výslovného písemného souhlasu držitele práv je ZAKÁZÁN
   g) odstraňovat nebo měnit údaje o autorství a licenci.
 
 
-3. POVOLENÉ UŽITÍ
+3. POVOLENÉ UŽITÍ — INTERNÍ TÝM
 
   a) Zaměstnanci, spolupracovníci a pověření agenti držitele práv smějí dílo
-     užívat výhradně pro potřeby držitele práv a v rozsahu přidělených
-     oprávnění.
-  b) Zákazníkovi, kterému držitel práv dílo nasadí, náleží nevýhradní,
-     nepřevoditelné a kdykoli odvolatelné právo provozovat nasazenou instalaci
-     pro vlastní vnitřní potřebu, po dobu trvání smluvního vztahu.
-     Toto právo nezahrnuje žádné z jednání zakázaných v článku 2.
-  c) Jakékoli jiné užití vyžaduje samostatnou písemnou smlouvu.
+     užívat výhradně pro potřeby IT Enterprise Solution s.r.o. a v rozsahu
+     přidělených oprávnění.
 
 
-3a. TESTOVACÍ FÁZE DO 1. 1. 2027
+4. OMEZENÁ LICENCE K UŽITÍ NASAZENÉ INSTALACE — KLIENTSKÁ DOLOŽKA
+
+  Zákazníkovi, jemuž IT Enterprise Solution s.r.o. dílo nasadí, náleží
+  nevýhradní, nepřevoditelné a kdykoli odvolatelné právo provozovat
+  konkrétní nasazenou instalaci pro vlastní vnitřní potřebu, po dobu trvání
+  platného smluvního vztahu s IT Enterprise Solution s.r.o.
+
+  Toto právo:
+    - vzniká zákazníkovi teprve dnem zahájení smluvního provozu;
+    - zahrnuje pouze provozování nasazené instalace, nikoli přístup ke
+      zdrojovému kódu ani k jeho kopii;
+    - nezahrnuje žádné z jednání zakázaných v článku 2;
+    - zaniká okamžitě s ukončením smluvního vztahu.
+
+  Jakékoli jiné užití vyžaduje samostatnou písemnou smlouvu.
+
+  ⚠️  Přesné znění klientské doložky a rozsah licencovaného práva by měl
+      posoudit advokát — viz právní upozornění na začátku tohoto souboru.
+
+
+5. FÁZE VÝVOJE — DO 1. 1. 2027
 
   Do 1. ledna 2027 je dílo ve fázi vývoje a ověřování. Do tohoto dne:
 
-  a) není poskytováno zákazníkům k produkčnímu provozu;
-  b) veškeré instalace u třetích osob jsou pouze zkušební a nezakládají
-     nárok na dostupnost, funkčnost ani podporu;
+  a) není poskytováno zákazníkům k produkčnímu provozu bez výslovného
+     souhlasu IT Enterprise Solution s.r.o.;
+  b) veškeré instalace u třetích osob jsou považovány za zkušební a
+     nezakládají nárok na dostupnost, funkčnost ani podporu;
   c) držitel práv může dílo kdykoli změnit, omezit nebo odstavit bez
      předchozího upozornění.
 
-  Právo podle článku 3 písm. b) vzniká zákazníkovi až dnem zahájení
-  produkčního provozu, nejdříve 1. 1. 2027, a to na základě písemné smlouvy.
+  Klientská licence podle článku 4 vzniká nejdříve 1. 1. 2027, a to na
+  základě uzavřené písemné smlouvy.
 
 
-4. DŮVĚRNOST
+6. DŮVĚRNOST — OBCHODNÍ TAJEMSTVÍ
 
-Dílo je obchodním tajemstvím držitele práv. Každý, komu je zpřístupněno, je
-povinen zachovávat mlčenlivost a chránit je před přístupem třetích osob,
-a to i po skončení spolupráce nebo smluvního vztahu.
-
-
-5. BEZ ZÁRUKY
-
-Dílo je poskytováno „tak, jak je“. Držitel práv neposkytuje žádné záruky
-a neodpovídá za škodu vzniklou užitím díla, není-li písemně dohodnuto jinak.
+  Dílo je obchodním tajemstvím IT Enterprise Solution s.r.o. Každý, komu je
+  zpřístupněno, je povinen zachovávat mlčenlivost a chránit je před přístupem
+  třetích osob, a to i po skončení spolupráce nebo smluvního vztahu.
 
 
-6. UKONČENÍ
+7. BEZ ZÁRUKY
 
-Porušením kterékoli povinnosti podle této licence oprávnění zaniká okamžitě
-a bez upozornění. Povinnost mlčenlivosti podle článku 4 trvá i po zániku
-oprávnění.
+  Dílo je poskytováno „tak, jak je". IT Enterprise Solution s.r.o. neposkytuje
+  žádné záruky a neodpovídá za škodu vzniklou užitím díla, není-li písemně
+  dohodnuto jinak.
 
 
-7. ROZHODNÉ PRÁVO
+8. UKONČENÍ OPRÁVNĚNÍ
 
-Licence se řídí právním řádem České republiky. Spory rozhodují české soudy.
+  Porušením kterékoli povinnosti podle této licence oprávnění zaniká okamžitě
+  a bez upozornění. Povinnost mlčenlivosti podle článku 6 trvá i po zániku
+  oprávnění.
+
+
+9. ROZHODNÉ PRÁVO
+
+  Tato licence se řídí právním řádem České republiky. Spory rozhodují soudy
+  příslušné dle sídla IT Enterprise Solution s.r.o.
+
+
+10. TŘETÍ STRANY A OPEN-SOURCE ZÁVISLOSTI
+
+  Tento repozitář může obsahovat části nebo závislosti podléhající licencím
+  třetích stran (např. MIT, Apache 2.0, LGPL). Takovéto části se řídí
+  příslušnou licencí třetí strany, nikoliv touto licencí. Pokud jsou licenční
+  podmínky třetí strany v rozporu s touto licencí, platí podmínky třetí strany
+  pouze pro danou část. Povinnosti vyplývající z licencí třetích stran jsou
+  tímto zachovány.
 
 
 KONTAKT
-IT-Enterprise Solutions — dev@it-enterprise.cz
+IT Enterprise Solution s.r.o.
+dev@it-enterprise.cz
+https://git.it-enterprise.solutions
 
 
-────────────────────────────────────────────────────────────────────────────
-ENGLISH SUMMARY (the Czech text above prevails)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ENGLISH
+(In case of conflict, the Czech text above prevails.)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Proprietary and confidential. Copyright (c) 2026 IT-Enterprise Solutions.
-All rights reserved.
+PROPRIETARY LICENSE — IT ENTERPRISE SOLUTION S.R.O.
+Version 1.1, effective 16 September 2026
+Supersedes Version 1.0 of 15 September 2026.
 
-You may NOT copy, distribute, publish, modify, create derivative works,
-reverse engineer, or use this work for training machine-learning systems.
-Protection expressly extends to the ARCHITECTURE, METHODS AND CONCEPTS
-expressed herein, not merely to the source text: reimplementing the same
-solution in your own code is equally prohibited.
+Copyright (c) 2026 IT Enterprise Solution s.r.o. All rights reserved.
 
-DEVELOPMENT PHASE UNTIL 1 JANUARY 2027: this work is under development and
-evaluation. Until that date it is not released to customers for production
-use; any third-party installation is a trial only, carries no warranty of
-availability, functionality or support, and may be changed or withdrawn at
-any time without notice.
 
-From the start of production use (no earlier than 1 January 2027), and only
-under a written agreement, customers of IT-Enterprise Solutions receive a
-non-exclusive, non-transferable, revocable right to operate the deployed
-installation for their own internal use for the duration of their contract,
-and nothing more.
+⚠️  LEGAL NOTICE — THIS TEXT WAS PREPARED BY AN INTERNAL TEAM, NOT A LAWYER.
+    The exact wording should be reviewed by a solicitor or law firm before
+    being relied upon in contractual relationships with clients. This need is
+    tracked as an open question under task #14441
+    (kokpit.it-enterprise.pro).
 
-Any other use requires a separate written agreement.
+
+1. SCOPE OF PROTECTION
+
+This license applies to all content in this repository and everything derived
+from it, including but not limited to:
+
+  a) source code, scripts, configurations, data structures, and database
+     schemas;
+  b) documentation, guides, runbooks, and wiki content;
+  c) ARCHITECTURE, design patterns, methods, processes, and CONCEPTS
+     expressed herein;
+  d) graphic materials, UI text, and translations;
+  e) compiled, built, or otherwise derived forms of the above.
+
+The protection under item (c) is explicit: not only the textual expression
+of the work is protected, but also the conceptual solution, architecture, and
+method expressed therein. Reimplementing the same solution in your own code
+or in a different programming language is equally prohibited.
+
+
+2. RESTRICTIONS
+
+Without the prior express written consent of the rights holder, you MAY NOT:
+
+  a) reproduce, copy, or otherwise record the work or any part of it;
+  b) distribute, share, publish, or make the work available to any third
+     party, including free of charge;
+  c) create derivative works, modify, or build upon the work;
+  d) adopt the architecture, methods, processes, or concepts of the work in
+     any other solution, even if the result is written in your own code;
+  e) reverse engineer, decompile, or disassemble the work;
+  f) use the work or any part of it to train, fine-tune, or evaluate machine
+     learning or artificial intelligence systems;
+  g) remove or alter any copyright or license notices.
+
+
+3. PERMITTED USE — INTERNAL TEAM
+
+  a) Employees, contractors, and authorized agents of IT Enterprise Solution
+     s.r.o. may use the work solely for the purposes of IT Enterprise Solution
+     s.r.o. and within the scope of their assigned permissions.
+
+
+4. LIMITED LICENSE TO OPERATE A DEPLOYED INSTALLATION — CLIENT CLAUSE
+
+  A customer to whom IT Enterprise Solution s.r.o. has deployed the work
+  receives a non-exclusive, non-transferable, revocable right to operate the
+  specific deployed installation for their own internal use, for the duration
+  of a valid contractual relationship with IT Enterprise Solution s.r.o.
+
+  This right:
+    - takes effect only on the date the contractual operation begins;
+    - covers operation of the deployed installation only, not access to the
+      source code or any copy thereof;
+    - does not include any of the acts restricted in Section 2;
+    - terminates immediately upon the end of the contractual relationship.
+
+  Any other use requires a separate written agreement.
+
+  ⚠️  The exact wording of the client clause and the scope of the licensed
+      right should be reviewed by a solicitor — see the legal notice at the
+      top of this file.
+
+
+5. DEVELOPMENT PHASE — UNTIL 1 JANUARY 2027
+
+  Until 1 January 2027 the work is in development and evaluation phase.
+  During this period:
+
+  a) it is not made available to customers for production use without the
+     express written consent of IT Enterprise Solution s.r.o.;
+  b) any installation at a third party is considered a trial; no warranty of
+     availability, functionality, or support is given;
+  c) IT Enterprise Solution s.r.o. may change, restrict, or take down the
+     work at any time without prior notice.
+
+  The client license under Section 4 takes effect no earlier than 1 January
+  2027 and only under a concluded written agreement.
+
+
+6. CONFIDENTIALITY — TRADE SECRET
+
+  The work constitutes a trade secret of IT Enterprise Solution s.r.o.
+  Anyone to whom it is disclosed is obliged to maintain confidentiality and
+  protect it from access by third parties, including after the end of any
+  collaboration or contractual relationship.
+
+
+7. NO WARRANTY
+
+  The work is provided "as is". IT Enterprise Solution s.r.o. makes no
+  warranties and is not liable for any damage arising from the use of the
+  work unless otherwise agreed in writing.
+
+
+8. TERMINATION
+
+  Any breach of an obligation under this license immediately and
+  automatically terminates the permission granted, without notice. The
+  confidentiality obligation under Section 6 survives termination.
+
+
+9. GOVERNING LAW
+
+  This license is governed by the laws of the Czech Republic. Disputes are
+  subject to the jurisdiction of the courts competent for the registered
+  office of IT Enterprise Solution s.r.o.
+
+
+10. THIRD-PARTY AND OPEN-SOURCE DEPENDENCIES
+
+  This repository may contain portions or dependencies subject to third-party
+  licenses (e.g. MIT, Apache 2.0, LGPL). Such portions are governed by their
+  respective third-party license, not by this license. Where a third-party
+  license conflicts with this license, the third-party terms apply only to
+  that specific portion. Obligations arising from third-party licenses are
+  preserved by this license.
+
+
+CONTACT
+IT Enterprise Solution s.r.o.
+dev@it-enterprise.cz
+https://git.it-enterprise.solutions
