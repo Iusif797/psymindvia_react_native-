@@ -1,4 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { API_BASE_URL } from "./config";
+
+// ─── Public types ─────────────────────────────────────────────────────────────
 
 export interface User {
   id: string;
@@ -7,168 +10,176 @@ export interface User {
   avatarUri?: string;
 }
 
+/** Kept for demoAccount.ts compatibility – always returns []. */
 interface StoredUser extends User {
-  passwordHash: string;
+  passwordHash?: string;
 }
 
-const STORAGE_KEYS = {
-  USERS: "auth_users",
+// ─── Storage keys ─────────────────────────────────────────────────────────────
+
+/** Exported so demoAccount.ts can read/write CURRENT_USER directly. */
+export const STORAGE_KEYS = {
+  TOKEN: "auth_token",
   CURRENT_USER: "auth_current_user",
   AVATAR: "user_avatar",
+  /** Legacy key – kept so old installs that wrote USERS don't crash. */
+  USERS: "auth_users",
 };
 
-const simpleHash = (str: string): string => {
-  let hash = 0;
-  for (let i = 0; i < str.length; i++) {
-    const char = str.charCodeAt(i);
-    hash = (hash << 5) - hash + char;
-    hash = hash & hash;
-  }
-  return Math.abs(hash).toString(36) + str.length.toString(36);
-};
+// ─── Validation ───────────────────────────────────────────────────────────────
 
 export const validateEmail = (email: string): string | null => {
-  if (!email.trim()) {
-    return "Введите email";
-  }
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(email.trim())) {
-    return "Некорректный формат email";
-  }
+  if (!email.trim()) return "Введите email";
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) return "Некорректный формат email";
   return null;
 };
 
 export const validatePassword = (password: string): string | null => {
-  if (!password) {
-    return "Введите пароль";
-  }
-  if (password.length < 6) {
-    return "Пароль должен быть не менее 6 символов";
-  }
+  if (!password) return "Введите пароль";
+  if (password.length < 6) return "Пароль должен быть не менее 6 символов";
   return null;
 };
 
 export const validatePasswordConfirm = (password: string, confirm: string): string | null => {
-  if (!confirm) {
-    return "Подтвердите пароль";
-  }
-  if (password !== confirm) {
-    return "Пароли не совпадают";
-  }
+  if (!confirm) return "Подтвердите пароль";
+  if (password !== confirm) return "Пароли не совпадают";
   return null;
 };
 
+// ─── Helpers ─────────────────────────────────────────────────────────────────
+
+type ApiRegisterResponse = {
+  ok: boolean;
+  error?: string;
+  token?: string;
+  user?: { id: number; email: string; created_at: string };
+};
+
+async function saveSession(token: string, user: User): Promise<void> {
+  await AsyncStorage.setItem(STORAGE_KEYS.TOKEN, token);
+  await AsyncStorage.setItem(STORAGE_KEYS.CURRENT_USER, JSON.stringify(user));
+}
+
+function mapApiUser(raw: { id: number; email: string; created_at: string }): User {
+  return { id: String(raw.id), email: raw.email, createdAt: raw.created_at };
+}
+
+// ─── Auth service ─────────────────────────────────────────────────────────────
+
 export const auth = {
+  /**
+   * Always returns []. Accounts live on the backend.
+   * Kept so demoAccount.ts (which checks for an existing email) compiles
+   * without modification; the check falls through to a register attempt.
+   */
   async getUsers(): Promise<StoredUser[]> {
-    const data = await AsyncStorage.getItem(STORAGE_KEYS.USERS);
-    return data ? JSON.parse(data) : [];
+    return [];
   },
 
-  async register(email: string, password: string): Promise<{ success: boolean; error?: string; user?: User }> {
+  async register(
+    email: string,
+    password: string,
+  ): Promise<{ success: boolean; error?: string; user?: User }> {
     const emailError = validateEmail(email);
     if (emailError) return { success: false, error: emailError };
-
     const passwordError = validatePassword(password);
     if (passwordError) return { success: false, error: passwordError };
 
-    const users = await this.getUsers();
-    const normalizedEmail = email.trim().toLowerCase();
-
-    if (users.find((u) => u.email === normalizedEmail)) {
-      return { success: false, error: "Пользователь с таким email уже существует" };
+    try {
+      const res = await fetch(`${API_BASE_URL}/account/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: email.trim().toLowerCase(), password }),
+      });
+      const data = (await res.json()) as ApiRegisterResponse;
+      if (!data.ok) {
+        if (data.error === "account_exists")
+          return { success: false, error: "Пользователь с таким email уже существует" };
+        return { success: false, error: "Ошибка при регистрации" };
+      }
+      const user = mapApiUser(data.user!);
+      await saveSession(data.token!, user);
+      return { success: true, user };
+    } catch {
+      return { success: false, error: "Нет соединения с интернетом" };
     }
-
-    const newUser: StoredUser = {
-      id: `user_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`,
-      email: normalizedEmail,
-      passwordHash: simpleHash(password),
-      createdAt: new Date().toISOString(),
-    };
-
-    users.push(newUser);
-    await AsyncStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users));
-
-    const { passwordHash: _, ...userWithoutPassword } = newUser;
-    await AsyncStorage.setItem(STORAGE_KEYS.CURRENT_USER, JSON.stringify(userWithoutPassword));
-
-    return { success: true, user: userWithoutPassword };
   },
 
-  async login(email: string, password: string): Promise<{ success: boolean; error?: string; user?: User }> {
+  async login(
+    email: string,
+    password: string,
+  ): Promise<{ success: boolean; error?: string; user?: User }> {
     const emailError = validateEmail(email);
     if (emailError) return { success: false, error: emailError };
-
     if (!password) return { success: false, error: "Введите пароль" };
 
-    const users = await this.getUsers();
-    const normalizedEmail = email.trim().toLowerCase();
-    const user = users.find((u) => u.email === normalizedEmail);
-
-    if (!user) {
-      return { success: false, error: "Пользователь не найден" };
+    try {
+      const res = await fetch(`${API_BASE_URL}/account/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: email.trim().toLowerCase(), password }),
+      });
+      const data = (await res.json()) as ApiRegisterResponse;
+      if (!data.ok) return { success: false, error: "Неверный email или пароль" };
+      const user = mapApiUser(data.user!);
+      await saveSession(data.token!, user);
+      return { success: true, user };
+    } catch {
+      return { success: false, error: "Нет соединения с интернетом" };
     }
-
-    if (user.passwordHash !== simpleHash(password)) {
-      return { success: false, error: "Неверный пароль" };
-    }
-
-    const { passwordHash: _, ...userWithoutPassword } = user;
-    await AsyncStorage.setItem(STORAGE_KEYS.CURRENT_USER, JSON.stringify(userWithoutPassword));
-
-    return { success: true, user: userWithoutPassword };
   },
 
   async logout(): Promise<void> {
-    await AsyncStorage.removeItem(STORAGE_KEYS.CURRENT_USER);
+    await AsyncStorage.multiRemove([STORAGE_KEYS.TOKEN, STORAGE_KEYS.CURRENT_USER]);
   },
 
   /**
-   * Полное удаление аккаунта вместе со всеми локальными данными.
-   *
-   * У приложения нет сервера — учётная запись и все записи хранятся
-   * только на этом устройстве (AsyncStorage). Поэтому «удалить аккаунт»
-   * означает стереть их здесь; после этого от пользователя не остаётся
-   * ничего. Требование App Store Review Guideline 5.1.1(v).
+   * Deletes the account on the backend then wipes all local data.
+   * Required by App Store Review Guideline 5.1.1(v).
    */
   async deleteAccount(): Promise<void> {
-    const current = await this.getCurrentUser();
-
-    if (current) {
-      const users = await this.getUsers();
-      const remaining = users.filter((u) => u.id !== current.id);
-      await AsyncStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(remaining));
-      await AsyncStorage.removeItem(STORAGE_KEYS.AVATAR + "_" + current.id);
+    try {
+      const token = await AsyncStorage.getItem(STORAGE_KEYS.TOKEN);
+      if (token) {
+        await fetch(`${API_BASE_URL}/account`, {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${token}` },
+        });
+      }
+    } catch {
+      // Always wipe locally even when the network call fails.
     }
-
-    await AsyncStorage.removeItem(STORAGE_KEYS.CURRENT_USER);
+    const current = await this.getCurrentUser();
+    const extraKeys = current ? [`${STORAGE_KEYS.AVATAR}_${current.id}`] : [];
+    await AsyncStorage.multiRemove([
+      STORAGE_KEYS.TOKEN,
+      STORAGE_KEYS.CURRENT_USER,
+      ...extraKeys,
+    ]);
   },
 
   async getCurrentUser(): Promise<User | null> {
     const data = await AsyncStorage.getItem(STORAGE_KEYS.CURRENT_USER);
-    return data ? JSON.parse(data) : null;
+    return data ? (JSON.parse(data) as User) : null;
   },
 
   async isAuthenticated(): Promise<boolean> {
-    const user = await this.getCurrentUser();
-    return user !== null;
+    const token = await AsyncStorage.getItem(STORAGE_KEYS.TOKEN);
+    return token !== null;
   },
 
   async saveAvatar(uri: string): Promise<void> {
     const user = await this.getCurrentUser();
     if (!user) return;
-
     user.avatarUri = uri;
     await AsyncStorage.setItem(STORAGE_KEYS.CURRENT_USER, JSON.stringify(user));
-    await AsyncStorage.setItem(STORAGE_KEYS.AVATAR + "_" + user.id, uri);
+    await AsyncStorage.setItem(`${STORAGE_KEYS.AVATAR}_${user.id}`, uri);
   },
 
   async getAvatar(): Promise<string | null> {
     const user = await this.getCurrentUser();
     if (!user) return null;
-
     if (user.avatarUri) return user.avatarUri;
-
-    const stored = await AsyncStorage.getItem(STORAGE_KEYS.AVATAR + "_" + user.id);
-    return stored;
+    return AsyncStorage.getItem(`${STORAGE_KEYS.AVATAR}_${user.id}`);
   },
 };

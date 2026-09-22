@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Drawer } from "expo-router/drawer";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -6,6 +7,8 @@ import CustomDrawerContent from "../components/CustomDrawerContent";
 import DrawerBurgerIcon from "../components/DrawerBurgerIcon";
 import PanicButton from "../components/PanicButton";
 import { DrawerOpenProvider, useDrawerOpen } from "../contexts/DrawerOpenContext";
+import { ensureDemoAccount } from "../services/demoAccount";
+import { flushOutbox } from "../services/courseOrders";
 
 const drawerLabelStyle = {
   fontSize: 16,
@@ -85,6 +88,16 @@ function RootLayoutContent() {
             drawerLabel: "Главная",
             drawerIcon: ({ color, size }) => (
               <MaterialCommunityIcons name="home-variant-outline" color={color} size={size} />
+            ),
+          }}
+        />
+        <Drawer.Screen
+          name="guide"
+          options={{
+            title: "Как пользоваться",
+            drawerLabel: "Как пользоваться",
+            drawerIcon: ({ color, size }) => (
+              <MaterialCommunityIcons name="compass-outline" color={color} size={size} />
             ),
           }}
         />
@@ -256,6 +269,13 @@ function RootLayoutContent() {
           }}
         />
         <Drawer.Screen
+          name="order"
+          options={{
+            title: "Заявка на обучение",
+            drawerItemStyle: { display: "none" },
+          }}
+        />
+        <Drawer.Screen
           name="meditations/index"
           options={{
             title: "Медитации",
@@ -299,6 +319,16 @@ function RootLayoutContent() {
 }
 
 export default function RootLayout() {
+  // Make the credentials published in the App Store / Play review notes work on
+  // a fresh install. Fire-and-forget: ensureDemoAccount never throws and never
+  // signs anybody in. See services/demoAccount.ts.
+  useEffect(() => {
+    void ensureDemoAccount();
+    // Re-send any course enquiry that could not reach the server earlier. The
+    // backend is idempotent on client_request_id, so this cannot duplicate.
+    void flushOutbox();
+  }, []);
+
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <DrawerOpenProvider>
